@@ -2,7 +2,9 @@
 import os
 import environ
 import allauth
-
+from dotenv import load_dotenv
+import crispy_bootstrap4
+load_dotenv()
 # DEFAULT VARIABLES
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -15,7 +17,7 @@ USE_TZ = True
 # ENVIRON get variables
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False)
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", ).split()
 POSTGRES_DB = os.environ.get("POSTGRES_DB")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 POSTGRES_USER = os.environ.get("POSTGRES_USER")
@@ -23,6 +25,8 @@ POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 NOTIFY_EMAIL = os.getenv("NOTIFY_EMAIL")
+print(f"POSTGRES_DB: {POSTGRES_DB}")
+print(f"POSTGRES_PASSWORD: {SECRET_KEY}")
 
 # INSTALLED APPS
 INSTALLED_APPS = [

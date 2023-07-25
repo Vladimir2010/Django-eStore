@@ -1,27 +1,14 @@
 {% load static %}
 {% load cart_template_tags %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Django Ecom {% block head_title %}{% endblock %}</title>
+    <title>Онлайн Магазин с Джанго{% block head_title %}{% endblock %}</title>
     {% block extra_head %}
     {% endblock %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'icons/apple-icon-57x57.png' %}">
-    <link rel="apple-touch-icon" sizes="60x60" href="{% static 'icons/apple-icon-60x60.png' %}">
-    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'icons/apple-icon-72x72.png' %}">
-    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'icons/apple-icon-76x76.png' %}">
-    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'icons/apple-icon-114x114.png' %}">
-    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'icons/apple-icon-120x120.png' %}">
-    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'icons/apple-icon-144x144.png' %}">
-    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'icons/apple-icon-152x152.png' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-icon-180x180.png' %}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'icons/android-icon-192x192.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'icons/favicon-96x96.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16x16.png' %}">
+    <link rel="icon" type="image/jpg" href="{% static 'icons/logo.jpg' %}">
     <link rel="manifest" href="{% static 'icons/manifest.json' %}">
 
     <meta name="msapplication-TileColor" content="#ffffff">
@@ -51,7 +38,7 @@
                     <div class="col-6 col-md-8 mb-3 mb-md-0 col-md-4 order-1 order-md-2">
                         <div>
                             <a href="{% url 'home' %}">
-                                <img class="img-fluid" src="{% static 'images/logo.png' %}" style="max-width: 150px;"/>
+                                <img class="img-fluid" src="{% static 'images/logo.jpg' %}" style="max-width: 150px;"/>
                             </a>
                         </div>
                     </div>

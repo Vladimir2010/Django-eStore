@@ -66,7 +66,7 @@ class Product(models.Model):
         return reverse("staff:product-delete", kwargs={'pk': self.pk})
 
     def get_price(self):
-        return "{:.2f}".format(self.price / 100)
+        return "{:.2f}".format(self.price)
 
     @property
     def in_stock(self):
@@ -93,7 +93,7 @@ class OrderItem(models.Model):
 
     def get_total_item_price(self):
         price = self.get_raw_total_item_price()  # 1000
-        return "{:.2f}".format(price / 100)
+        return "{:.2f}".format(price)
 
 
 class Order(models.Model):
@@ -131,7 +131,7 @@ class Order(models.Model):
 
     def get_total(self):
         total = self.get_raw_total()
-        return "{:.2f}".format(total / 100)
+        return "{:.2f}".format(total)
 
 
 class Payment(models.Model):
