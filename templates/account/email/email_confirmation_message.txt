@@ -1,9 +1,9 @@
 {% load account %}{% user_display user as user_display %}{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Hello from {{ site_name }}!
 
-You're receiving this e-mail because user {{ user_display }} has given yours as an e-mail address to connect their account.
+Вие получихте този имейл, защото потребителят {{ user_display }} го е дал за свързване с  акаунта си!.
 
-To confirm this is correct, go to {{ activate_url }}
+За да потвърдите този имейл отидете на {{ activate_url }}
 {% endblocktrans %}
-{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you from {{ site_name }}!
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Благодарим Ви {{ site_name }}!
 {{ site_domain }}{% endblocktrans %}
 {% endautoescape %}

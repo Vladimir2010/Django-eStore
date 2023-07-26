@@ -6,6 +6,8 @@ from django.shortcuts import reverse
 from django.views import generic
 from cart.models import Order
 from .forms import ContactForm
+from django.core import mail
+from django.core.mail import EmailMessage
 
 
 class ProfileView(LoginRequiredMixin, generic.TemplateView):
@@ -36,17 +38,28 @@ class ContactView(generic.FormView):
         name = form.cleaned_data.get('name')
         email = form.cleaned_data.get('email')
         message = form.cleaned_data.get('message')
-
+        emails = [email for email in settings.ADMINS]
+        print(emails)
+        emails.append(settings.NOTIFY_EMAIL)
+        print(emails)
         full_message = f"""
             Получено съобщение от: {name}, {email}
             ________________________
 
             {message}
             """
-        send_mail(
-            subject="Получена обратна връзка!",
-            message=full_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.NOTIFY_EMAIL]
-        )
+        with mail.get_connection() as connection:
+            mail.EmailMessage(
+                subject="Получена обратна връзка!",
+                body=full_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=emails,
+                connection=connection,
+            ).send()
+        # send_mail(
+        #     subject="Получена обратна връзка!",
+        #     message=full_message,
+        #     from_email=settings.DEFAULT_FROM_EMAIL,
+        #     recipient_list=[settings.NOTIFY_EMAIL, settings.ADMINS]
+        # )
         return super(ContactView, self).form_valid(form)

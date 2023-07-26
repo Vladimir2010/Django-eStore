@@ -25,6 +25,13 @@ POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 NOTIFY_EMAIL = os.getenv("NOTIFY_EMAIL")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+print(EMAIL_HOST_USER)
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+
 
 # INSTALLED APPS
 INSTALLED_APPS = [
@@ -61,11 +68,13 @@ MIDDLEWARE = [
 ]
 
 # BACKENDS
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+ADMINS = ["saitma@abv.bg", "vladikomputers2000@abv.bg" ]
 
 # URLS
 ROOT_URLCONF = 'ecom.urls'
@@ -128,7 +137,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # AUTH Settings
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
