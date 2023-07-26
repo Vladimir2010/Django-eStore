@@ -9,7 +9,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-7">
-                    <h2 class="h3 mb-3 text-black">Sign in</h2>
+                    <h2 class="h3 mb-3 text-black">Регистрация</h2>
                 </div>
                 <div class="col-md-7">
                     <form method="post" action="{% url 'account_signup' %}">
@@ -19,12 +19,11 @@
                                    value="{{ redirect_field_value }}"/>
                         {% endif %}
                         {{ form|crispy }}
-                        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Sign up">
+                        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Регистрация">
                     </form>
                     <div class="row mt-3">
                         <div class="col-6">
-                            <a href="{% url 'account_login' %}"><small>Already have an
-                                account?</small></a>
+                            <a href="{% url 'account_login' %}"><small>Вече съществува такъв акаунт?</small></a>
                         </div>
                         <div class="col-6 text-right">
                         </div>
