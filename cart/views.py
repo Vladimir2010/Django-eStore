@@ -6,13 +6,14 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import get_object_or_404, reverse, redirect
+from django.shortcuts import get_object_or_404, reverse, redirect, render
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from .forms import AddToCartForm, AddressForm
 from .models import Product, OrderItem, Address, Payment, Order, Category, BankAccount
 from .utils import get_or_set_order_session
+
 
 
 class ProductListView(generic.ListView):
@@ -190,7 +191,7 @@ class OrderDetailView(LoginRequiredMixin, generic.DetailView):
 
 def bank_payment(request):
     bank = BankAccount.objects.first()
-    order = Order.objects.get(user=request.user, ordered=False)
+    order = get_or_set_order_session(request)
     order1 = get_or_set_order_session(request)
     print(order1)
     print(order)
