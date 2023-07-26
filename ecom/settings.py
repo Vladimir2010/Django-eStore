@@ -8,8 +8,8 @@ load_dotenv()
 # DEFAULT VARIABLES
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'bg'
+TIME_ZONE = 'EET'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True

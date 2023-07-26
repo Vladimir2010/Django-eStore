@@ -63,3 +63,5 @@ class AddressForm(forms.Form):
                 self.add_error("shipping_zip_code","Моля попълнете полето")
             if not data.get('shipping_city', None):
                 self.add_error("shipping_city", "Моля попълнете полето")
+
+

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Банково Плащане</title>
+</head>
+<body>
+<div class="container">
+    <h1>Банково Плащане</h1>
+
+</div>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html>
+<style>
+    table, th, td {
+        border: 2px solid;
+        background: white;
+
+    }
+</style>
+<body>
+
+<table data-layout="text-left">
+    <tbody>
+    <tr>
+        <td colspan="2"><span>Име на получателя: </span>{{ bank.get_full_name }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="c5o2hx68t">
+            <div data-layout="row gutter-none start">
+                <div data-layout="col 12 8@md"><span>IBAN на получателя</span>{{ bank.iban}}</div>
+                <div data-layout="col 12 4@md"><span>BIC на получателя</span>{{ bank.bic }}</div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><span>Банка на получателя</span>{{ bank.name}}</td>
+    </tr>
+    <tr>
+        <td><span>Сума</span>{{ order.get_total }}лв.</td>
+    </tr>
+    <tr>
+        <td colspan="2"><span>Основание за плащане</span>9295172 – ХОСТИНГ УСЛУГИ</td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>A basic HTML table</h2>
+
+<table style="width:100%">
+    <tr>
+        <td>{{ }}</td>
+        <td>Maria Anders</td>
+        <td>{{ bank.name }}</td>
+    </tr>
+</table>
+
+<p>To understand the example better, we have added borders to the table.</p>
+
+</body>
+</html>
+

@@ -50,10 +50,10 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="alert alert-success" role="alert" id="alertSuccess" style="display: none;">
-                Your payment was successful.
+                Вашето плащане беше успешно.
             </div>
             <div class="alert alert-danger" role="alert" id="alertFailure" style="display: none;">
-                Your payment failed. Please try again.
+                Вашето плащане се провали. Моля опитайте отново.
             </div>
 
             <div class="text-center py-3">
@@ -66,10 +66,11 @@
             </div>
 
             <div id='paymentInfo'>
-                <p>Order total: ${{ order.get_total }}</p>
-                <h4>Select a payment method</h4>
+                <p>Обща сума на поръчката: {{ order.get_total }}лв.</p>
+                <h4>Изберете метод на плащане</h4>
                 <div>
-                    <a href="{% url 'cart:payment-stripe' %}" class="btn btn-secondary btn-block mb-3">Stripe</a>
+                    <a href="#" class="btn btn-secondary btn-block mb-3">Наложен платеж</a>
+                    <a href="" class="btn btn-secondary btn-block mb-3">Банков път</a>
                 </div>
                 <div id="paypal-button-container"></div>
             </div>
@@ -81,8 +82,8 @@
 
 {% block scripts %}
 
-<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}">
-</script>
+{#<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}">#}
+{#</script>#}
 
 <script>
 
@@ -121,38 +122,38 @@
             }
         })
     }
-
-    paypal.Buttons({
-        createOrder: function (data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: '{{ order.get_total }}'
-                    }
-                }]
-            });
-        },
-        onApprove: function (data, actions) {
-            toggleLoader(true);
-            // This function captures the funds from the transaction.
-            return actions.order.capture().then(function (details) {
-                // This function shows a transaction success message to your buyer.
-                sendOrderConfirmed(details).then(res => {
-                    toggleLoader(false);
-                    const alertSuccess = document.getElementById('alertSuccess');
-                    alertSuccess.style.display = 'block';
-                    setTimeout(function () {
-                        window.location.replace("{{ CALLBACK_URL }}")
-                    }, 3000);
-                })
-            })
-                .catch(err => {
-                    const alertFailure = document.getElementById('alertFailure');
-                    alertFailure.style.display = 'block';
-                })
-                .finally(() => toggleLoader(false));
-        }
-    }).render('#paypal-button-container');
+    {##}
+    {#paypal.Buttons({#}
+    {#    createOrder: function (data, actions) {#}
+    {#        return actions.order.create({#}
+    {#            purchase_units: [{#}
+    {#                amount: {#}
+    {#                    value: '{{ order.get_total }}'#}
+    {#                }#}
+    {#            }]#}
+    {#        });#}
+    {#    },#}
+    {#    onApprove: function (data, actions) {#}
+    {#        toggleLoader(true);#}
+    {#        // This function captures the funds from the transaction.#}
+    {#        return actions.order.capture().then(function (details) {#}
+    {#            // This function shows a transaction success message to your buyer.#}
+    {#            sendOrderConfirmed(details).then(res => {#}
+    {#                toggleLoader(false);#}
+    {#                const alertSuccess = document.getElementById('alertSuccess');#}
+    {#                alertSuccess.style.display = 'block';#}
+    {#                setTimeout(function () {#}
+    {#                    window.location.replace("{{ CALLBACK_URL }}")#}
+    {#                }, 3000);#}
+    {#            })#}
+    {#        })#}
+    {#            .catch(err => {#}
+    {#                const alertFailure = document.getElementById('alertFailure');#}
+    {#                alertFailure.style.display = 'block';#}
+    {#            })#}
+    {#            .finally(() => toggleLoader(false));#}
+    {#    }#}
+    {#}).render('#paypal-button-container');#}
 </script>
 
 {% endblock scripts %}

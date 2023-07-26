@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.shortcuts import reverse
 from django.utils.text import slugify
+from .validators import check_bank_account
 
 User = get_user_model()
 
@@ -160,3 +161,14 @@ def pre_save_product_receiver(sender, instance, *args, **kwargs):
 
 
 pre_save.connect(pre_save_product_receiver, sender=Product)
+
+class BankAccount(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    iban = models.CharField(max_length=22, unique=True, validators=[check_bank_account])
+    bic = models.CharField(max_length=100)
+    bank_name = models.CharField(max_length=100)
+
+    @property
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"

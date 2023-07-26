@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from .forms import AddToCartForm, AddressForm
-from .models import Product, OrderItem, Address, Payment, Order, Category
+from .models import Product, OrderItem, Address, Payment, Order, Category, BankAccount
 from .utils import get_or_set_order_session
 
 
@@ -186,3 +186,16 @@ class OrderDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'order.html'
     queryset = Order.objects.all()
     context_object_name = 'order'
+
+
+def bank_payment(request):
+    bank = BankAccount.objects.first()
+    order = Order.objects.get(user=request.user, ordered=False)
+    order1 = get_or_set_order_session(request)
+    print(order1)
+    print(order)
+    context = {
+        'bank': bank
+    }
+
+    return render(request, 'cart/bank-payment.html', context)
