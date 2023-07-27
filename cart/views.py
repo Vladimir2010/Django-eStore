@@ -13,7 +13,12 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import AddToCartForm, AddressForm
 from .models import Product, OrderItem, Address, Payment, Order, Category, BankAccount
 from .utils import get_or_set_order_session
-
+from django.http import FileResponse
+from reportlab.lib.units import inch
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus.paragraph import Paragraph
 
 
 class ProductListView(generic.ListView):
@@ -191,12 +196,44 @@ class OrderDetailView(LoginRequiredMixin, generic.DetailView):
 
 def bank_payment(request):
     bank = BankAccount.objects.first()
+    print(bank)
     order = get_or_set_order_session(request)
-    order1 = get_or_set_order_session(request)
-    print(order1)
     print(order)
     context = {
-        'bank': bank
+        'bank': bank,
+        'order': order
     }
 
     return render(request, 'cart/bank-payment.html', context)
+
+
+def pdf_invoice(request):
+    buffer = io.BytesIO()
+    pdf = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
+    object = pdf.beginText()
+    object.setTextOrigin(inch, inch)
+    # object.setFont("Arial", 20)
+    order = get_or_set_order_session(request)
+    items = order.items
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+    pdfmetrics.registerFont(TTFont('arial', 'fonts/Arial.ttf'))
+    # p = Paragraph(data.decode('utf-8'), style=styNormal)
+
+    lines = [
+        "Проформа Фактура",
+        "Номер: : " + str(order.id),
+        "от: " + order.ordered_date,
+        'Получател: ' + order.get_full_user_name,
+        "Адрес: " + order.shipping_address,]
+
+    for line in lines:
+        p = Paragraph(line.decode('utf-8'), style=styNormal)
+        object.textLine(p)
+
+    pdf.drawText(object)
+    pdf.showPage()
+    pdf.save()
+    buffer.seek(0)
+
+    return FileResponse(buffer, as_attachment=True, filename='invoice.pdf')

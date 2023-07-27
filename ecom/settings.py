@@ -4,6 +4,7 @@ import environ
 import allauth
 from dotenv import load_dotenv
 import crispy_bootstrap4
+from django.utils.translation import gettext_lazy as _
 load_dotenv()
 # DEFAULT VARIABLES
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,7 +14,7 @@ TIME_ZONE = 'EET'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
+LANGUAGES = [("bg", _("Bulgarian"))]
 # ENVIRON get variables
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False)
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -119,6 +121,11 @@ if POSTGRE:
             "PORT": POSTGRES_PORT,
         }
     }
+ACCOUNT_FORMS = {
+'signup': 'core.forms.CustomSignupForm',
+# 'login': 'core.forms.CustomLoginForm',
+}
+
 
 # AUTH Validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -137,9 +144,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # AUTH Settings
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 # Login Redirect

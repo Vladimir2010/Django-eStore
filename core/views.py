@@ -63,3 +63,5 @@ class ContactView(generic.FormView):
         #     recipient_list=[settings.NOTIFY_EMAIL, settings.ADMINS]
         # )
         return super(ContactView, self).form_valid(form)
+
+

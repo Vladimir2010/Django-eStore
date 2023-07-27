@@ -134,6 +134,10 @@ class Order(models.Model):
         total = self.get_raw_total()
         return "{:.2f}".format(total)
 
+    @property
+    def get_full_user_name(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+
 
 class Payment(models.Model):
     order = models.ForeignKey(
@@ -162,13 +166,33 @@ def pre_save_product_receiver(sender, instance, *args, **kwargs):
 
 pre_save.connect(pre_save_product_receiver, sender=Product)
 
+
 class BankAccount(models.Model):
     first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    iban = models.CharField(max_length=22, unique=True, validators=[check_bank_account])
-    bic = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
+    IBAN = models.CharField(max_length=22, unique=True, validators=[check_bank_account])
+    BIC = models.CharField(max_length=100)
     bank_name = models.CharField(max_length=100)
+    name_of_firm = models.BooleanField(default=False)
 
     @property
     def get_full_name(self):
+        if self.get_is_firm:
+            return self.first_name
         return f"{self.first_name} {self.last_name}"
+    @property
+    def get_name(self):
+        if self.get_is_firm:
+            return self.first_name
+        else:
+            return f"{self.first_name} {self.last_name}"
+
+    @property
+    def get_is_firm(self):
+        if self.name_of_firm:
+            return True
+        return False
+
+    def __str__(self):
+        return self.get_name
+

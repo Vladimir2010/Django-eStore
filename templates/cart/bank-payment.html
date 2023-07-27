@@ -1,64 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Банково Плащане</title>
-</head>
-<body>
-<div class="container">
-    <h1>Банково Плащане</h1>
-
-</div>
-
-</body>
-</html>
-
-
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% block extra_head %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Банково Плащане</title>
+    </head>
+{% endblock %}
 <style>
-    table, th, td {
-        border: 2px solid;
-        background: white;
-
+    .table {
+        text-align: center
     }
 </style>
 <body>
-
-<table data-layout="text-left">
-    <tbody>
-    <tr>
-        <td colspan="2"><span>Име на получателя: </span>{{ bank.get_full_name }}</td>
-    </tr>
-    <tr>
-        <td colspan="2" class="c5o2hx68t">
-            <div data-layout="row gutter-none start">
-                <div data-layout="col 12 8@md"><span>IBAN на получателя</span>{{ bank.iban}}</div>
-                <div data-layout="col 12 4@md"><span>BIC на получателя</span>{{ bank.bic }}</div>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2"><span>Банка на получателя</span>{{ bank.name}}</td>
-    </tr>
-    <tr>
-        <td><span>Сума</span>{{ order.get_total }}лв.</td>
-    </tr>
-    <tr>
-        <td colspan="2"><span>Основание за плащане</span>9295172 – ХОСТИНГ УСЛУГИ</td>
-    </tr>
-    </tbody>
-</table>
+{% block content %}
 
 
-{#<table style="width:100%">#}
-{#    <tr>#}
-{#        <td>{{ }}</td>#}
-{#        <td>Maria Anders</td>#}
-{#        <td>{{ bank.name }}</td>#}
-{#    </tr>#}
-{#</table>#}
+    <div class="container">
+        <h1>Банково Плащане</h1>
 
+    </div>
+
+    <style>
+        table, th, td {
+            border: 2px solid;
+            background: white;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 25px;
+
+        }
+    </style>
+    <table id="table" data-layout="text-left">
+        <tbody>
+        <tr>
+            <td colspan="2"><span>Име на получателя: </span>{{ bank.get_full_name }}</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="c5o2hx68t">
+                <div data-layout="row gutter-none start">
+                    <div data-layout="col 12 8@md"><span>IBAN на получателя: </span>{{ bank.IBAN }}</div>
+                    <div data-layout="col 12 4@md"><span>BIC на получателя: </span>{{ bank.BIC }}</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><span>Банка на получателя: </span>{{ bank.bank_name }}</td>
+        </tr>
+        <tr>
+            <td><span>Сума: </span>{{ order.get_total }}лв.</td>
+        </tr>
+        <tr>
+            <td colspan="2"><span>Основание за плаща: </span>{{ order.reference_number }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="{% url 'cart:pdf-invoice' %}"><button class="btn btn-primary btn-block mt-3" id="submitBtn">Приключи Поръчката</button></a>
+
+    {#<table style="width:100%">#}
+    {#    <tr>#}
+    {#        <td>{{ }}</td>#}
+    {#        <td>Maria Anders</td>#}
+    {#        <td>{{ bank.name }}</td>#}
+    {#    </tr>#}
+    {#</table>#}
+{% endblock %}
 </body>
 </html>
 
