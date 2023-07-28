@@ -12,7 +12,8 @@ urlpatterns = [
     path('contact/', views.ContactView.as_view(), name='contact'),
     path('cart/', include('cart.urls', namespace='cart')),
     path('staff/', include('staff.urls', namespace='staff')),
-    path('profile/', views.ProfileView.as_view(), name='profile')
+    path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('edit-profile/', views.edit_profile_view, name='edit-profile'),
 ]
 
 if settings.DEBUG:

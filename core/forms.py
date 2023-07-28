@@ -1,5 +1,6 @@
 from django import forms
 from allauth.account.forms import SignupForm, LoginForm
+from .models import Firm, CustomUserModel
 
 
 class ContactForm(forms.Form):
@@ -13,6 +14,11 @@ class ContactForm(forms.Form):
         'placeholder': 'Вашето съобщение'
     }))
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].label = "Име"
+        self.fields['email'].label = "Имейл"
+        self.fields['message'].label = "Съобщение"
 
 class CustomSignupForm(SignupForm):
     email = forms.EmailField(max_length=254, label='Имейл', widget=forms.TextInput(attrs={
@@ -25,9 +31,6 @@ class CustomSignupForm(SignupForm):
     last_name = forms.CharField(max_length=30, label='Второ Име', widget=forms.TextInput(attrs={
         'placeholder': "Второ Име"
     }))
-    name_of_firm = forms.CharField(max_length=100, label="Име на фирма (по избор)", required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Име на фирма (по избор)"
-    }))
     phone = forms.CharField(max_length=10, label='Телефон', widget=forms.TextInput(attrs={
         'placeholder': "Телефон"}))
 
@@ -35,23 +38,81 @@ class CustomSignupForm(SignupForm):
         user = super(CustomSignupForm, self).save(request)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        user.name_of_firm = self.cleaned_data['name_of_firm']
         user.phone = self.cleaned_data['phone']
         user.save()
         return user
 
-#
-# class CustomLoginForm(LoginForm):
-#     email = forms.EmailField(max_length=254, label='Имейл', widget=forms.TextInput(attrs={
-#         'placeholder': "Имейл"}))
-#     password = forms.CharField(max_length=30, label='Парола', widget=forms.TextInput(attrs={
-#         'placeholder': "Парола"}))
-#
-#
-#     def login(self, *args, **kwargs):
-#         user = super(CustomLoginForm, self).login(request)
-#         user.email = self.cleaned_data['email']
-#         user.password = self.cleaned_data['password']
-#
-#
 
+class FirmForm(forms.ModelForm):
+    class Meta:
+        model = Firm
+        fields = '__all__'
+        labels = {
+            'name_of_firm': 'Име на Фирма',
+            'bulstat': 'ЕИК',
+            'VAT_number': 'Номер по ЗДДС (по избор)',
+            'address_by_registration': 'Адрес на фирма по регистрация',
+            'owner_of_firm': 'МОЛ',
+        }
+        widgets = {
+            'name_of_firm': forms.TextInput(
+                attrs={
+                    'placeholder': 'Име на Фирма',
+                }
+            ),
+            'bulstat': forms.TextInput(
+                attrs={
+                    'placeholder': 'ЕИК',
+                }
+            ),
+            'VAT_number': forms.TextInput(
+                attrs={
+                    'placeholder': 'Номер по ЗДДС (по избор)',
+                }
+            ),
+            'address_by_registration': forms.TextInput(
+                attrs={
+                    'placeholder': 'Адрес на фирма по регистрация',
+                }
+            ),
+            'owner_of_firm': forms.TextInput(
+                attrs={
+                    'placeholder': 'МОЛ',
+                }
+            )
+        }
+
+
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = CustomUserModel
+        fields = ['first_name', 'last_name', 'email', 'phone_number']
+        labels = {
+            'first_name': 'Име',
+            'last_name': 'Фамилия',
+            'email': 'Имейл',
+            'phone_number': 'Телефон',
+        }
+        widgets = {
+            'first_name': forms.TextInput(
+                attrs={
+                    'placeholder': 'Име',
+                }
+            ),
+            'last_name': forms.TextInput(
+                attrs={
+                    'placeholder': 'Фамилия',
+                }
+            ),
+            'email': forms.EmailInput(
+                attrs={
+                    'placeholder': 'Имейл',
+                }
+            ),
+            'phone_number': forms.TextInput(
+                attrs={
+                    'placeholder': 'Телефон',
+                }
+            ),
+
+        }

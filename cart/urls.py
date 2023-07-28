@@ -22,6 +22,6 @@ urlpatterns = [
     path('confirm-order/', views.ConfirmOrderView.as_view(), name='confirm-order'),
     path('orders/<pk>/', views.OrderDetailView.as_view(), name='order-detail'),
     path('bank-payment/', views.bank_payment, name='bank-payment'),
-    path('pdf/', views.pdf_invoice, name='pdf-invoice'),
+    # path('pdf/', views.pdf_invoice, name='pdf-invoice'),
 
 ]

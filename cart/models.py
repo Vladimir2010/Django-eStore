@@ -4,8 +4,9 @@ from django.db.models.signals import pre_save
 from django.shortcuts import reverse
 from django.utils.text import slugify
 from .validators import check_bank_account
+from core.models import CustomUserModel
 
-User = get_user_model()
+User = CustomUserModel
 
 
 class Category(models.Model):
@@ -25,7 +26,7 @@ class Address(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     address_line_1 = models.CharField(max_length=150)
-    address_line_2 = models.CharField(max_length=150)
+    address_line_2 = models.CharField(max_length=150, null=True, blank=True)
     city = models.CharField(max_length=100)
     zip_code = models.CharField(max_length=20)
     address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
@@ -47,8 +48,6 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
-    # available_colours = models.ManyToManyField(ColourVariation)
-    # available_sizes = models.ManyToManyField(SizeVariation)
     primary_category = models.ForeignKey(
         Category, related_name='primary_products', blank=True, null=True, on_delete=models.CASCADE)
     secondary_categories = models.ManyToManyField(Category, blank=True)
@@ -82,9 +81,6 @@ class OrderItem(models.Model):
         "Order", related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-
-    # colour = models.ForeignKey(ColourVariation, on_delete=models.CASCADE)
-    # size = models.ForeignKey(SizeVariation, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.quantity} x {self.product.title}"
@@ -126,8 +122,6 @@ class Order(models.Model):
 
     def get_raw_total(self):
         subtotal = self.get_raw_subtotal()
-        # add tax, add delivery, subtract discounts
-        # total = subtotal - discounts + tax + delivery
         return subtotal
 
     def get_total(self):

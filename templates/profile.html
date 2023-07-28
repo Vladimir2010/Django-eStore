@@ -2,51 +2,93 @@
 
 {% block content %}
 
-<div class="site-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <h2 class="text-black">Your profile</h2>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            {{ request.user.email }}
-                            <a href="{% url 'account_logout' %}">
-                                <small class="float-right">Logout</small></a>
-                        </h5>
-                        <hr />
-                        <h5 class="card-title">Your orders</h5>
-                        <div class="site-blocks-table">
-                            <table class="table">
-                                <thead>
+    <div class="site-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <h2 class="text-black">Вашият профил</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ request.user.email }}
+                                <div class="col-lg">
+                                    <a href="{% url 'account_logout' %}">
+                                        <button class="float-right btn btn-sm btn-primary">Изход</button>
+                                    </a>
+                                    <br>
+                                    <br>
+                                    <a href="{% url 'edit-profile' %}">
+                                        <button class="btn btn-sm btn-primary float-right">Редактирай профила си
+                                        </button>
+                                    </a>
+                                    <br>
+                                    <br>
+                                    <a href="{% url 'account_change_password' %}">
+                                        <button class="float-right btn btn-sm btn-primary">Смяна на парола</button>
+                                    </a>
+                                </div>
+                            </h5>
+                            <br>
+                            <hr/>
+                            <h5 class="card-title">Информация за профила ви</h5>
+                            <hr/>
+                            <div class="site-blocks-table">
+                                <table>
+                                    <thead>
                                     <tr>
-                                        <th>Reference No.</th>
-                                        <th>Date</th>
-                                        <th>Amount</th>
-                                        <th>Payment Status</th>
+                                        <th>Име</th>
+                                        <th>Фамилия</th>
+                                        <th>Потребителско име</th>
+                                        <th>Телефон</th>
+                                        <th>Имейл</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>{{ request.user.first_name }}</td>
+                                        <td>{{ request.user.last_name }}</td>
+                                        <td>{{ request.user.username }}</td>
+                                        <td>{{ request.user.phone_number }}</td>
+                                        <td>{{ request.user.email }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr>
+                            <h5 class="card-title">Вашите поръчки</h5>
+                            <div class="site-blocks-table">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Поръчка номер.</th>
+                                        <th>Дата на поръчка</th>
+                                        <th>Цена</th>
+                                        <th>Платена</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
                                     {% for order in orders %}
-                                    <tr>
-                                        <td><a href="{% url 'cart:order-detail' order.pk %}">#{{ order.reference_number }}</a></td>
-                                        <td>{{ order.ordered_date }}</td>
-                                        <td>${{ order.get_total }}</td>
-                                        <td>{% if order.ordered %}Paid{% else %}Not paid{% endif %}</td>
-                                    </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="{% url 'cart:order-detail' order.pk %}">#{{ order.reference_number }}</a>
+                                            </td>
+                                            <td>{{ order.ordered_date }}</td>
+                                            <td>${{ order.get_total }}</td>
+                                            <td>{% if order.ordered %}Да{% else %}Не{% endif %}</td>
+                                        </tr>
                                     {% empty %}
-                                    <tr>
-                                        <td colspan="4">You haven't made any orders</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="4">Вие не сте направили никакви поръчки</td>
+                                        </tr>
                                     {% endfor %}
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock content %}

@@ -6,26 +6,26 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <h2 class="text-black">Staff Portal</h2>
+                <h2 class="text-black">Портал на Служители</h2>
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
                             {{ request.user.email }}
                         </h5>
                         <hr />
-                        <a href="{% url 'staff:product-list' %}">Products</a>
+                        <a href="{% url 'staff:product-list' %}">Продукти</a>
                         <hr />
 
-                        <h5 class="card-title">Recent orders</h5>
+                        <h5 class="card-title">Последни поръчки</h5>
                         <div class="site-blocks-table">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Reference No.</th>
-                                        <th>Date</th>
-                                        <th>User</th>
-                                        <th>Amount</th>
-                                        <th>Payment Status</th>
+                                        <th>Номер на поръчка.</th>
+                                        <th>Дата</th>
+                                        <th>Потребител</th>
+                                        <th>Цена</th>
+{#                                        <th>Payment Status</th>#}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -35,11 +35,11 @@
                                         <td>{{ order.ordered_date }}</td>
                                         <td>{{ order.user.email }}</td>
                                         <td>${{ order.get_total }}</td>
-                                        <td>{% if order.ordered %}Paid{% else %}Not paid{% endif %}</td>
+                                        <td>{% if order.ordered %}Платена{% else %}Не палтена{% endif %}</td>
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                        <td colspan="4">You haven't made any orders</td>
+                                        <td colspan="4">Не сте направили никакви поръчки</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

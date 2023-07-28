@@ -18,25 +18,20 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Product.</th>
-                                        <th>Total</th>
+                                        <th>Продукт.</th>
+                                        <th>Общо</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for item in order.items.all %}
                                     <tr>
-                                        <td>{{ item.size.name }}, {{ item.colour.name }} of {{ item.product.title }} x
-                                            {{ item.quantity }}</td>
-                                        <td>${{ item.get_total_item_price }}</td>
+                                        <td>{{ item.product.title }} x {{ item.quantity }}</td>
+                                        <td>{{ item.get_total_item_price }}лв.</td>
                                     </tr>
                                     {% endfor %}
                                     <tr>
-                                        <td>Subtotal</td>
-                                        <td>${{ order.get_subtotal }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td>${{ order.get_total }}</td>
+                                        <td>Общо</td>
+                                        <td>{{ order.get_total }}лв.</td>
                                     </tr>
                                 </tbody>
                             </table>
