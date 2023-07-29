@@ -13,11 +13,19 @@ class CustomUserModel(AbstractUser):
 class Firm(models.Model):
     user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
     name_of_firm = models.CharField(max_length=100)
-    bulstat = models.CharField(max_length=9)
-    VAT_number = models.CharField(max_length=11, null=True, blank=True)
+    bulstat = models.CharField(max_length=9, unique=True)
+    VAT_number = models.CharField(max_length=11, unique=True, null=True, blank=True)
     address_by_registration = models.CharField(max_length=200)
     owner_of_firm = models.CharField(max_length=100)
 
+    @property
+    def is_vat(self):
+        if not self.VAT_number is None:
+            return True
+        return False
+
+    def __str__(self):
+        return self.name_of_firm
 
 class Customer(models.Model):
     user = models.OneToOneField(CustomUserModel, on_delete=models.CASCADE)

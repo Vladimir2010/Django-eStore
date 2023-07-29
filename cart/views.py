@@ -237,3 +237,6 @@ def bank_payment(request):
 #     buffer.seek(0)
 #
 #     return FileResponse(buffer, as_attachment=True, filename='invoice.pdf')
+
+def search_view(request):
+    form = Pr

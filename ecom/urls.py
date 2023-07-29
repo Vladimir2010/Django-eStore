@@ -14,6 +14,9 @@ urlpatterns = [
     path('staff/', include('staff.urls', namespace='staff')),
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('edit-profile/', views.edit_profile_view, name='edit-profile'),
+    path('add-firm/', views.add_firm_view, name='add-firm'),
+    path('view-firms/', views.view_firms, name='view-firms'),
+    path('update-cart/<int:product_id>', views.update_cart_view, name='update-cart'),
 ]
 
 if settings.DEBUG:

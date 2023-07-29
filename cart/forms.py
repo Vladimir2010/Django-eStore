@@ -68,3 +68,25 @@ class AddressForm(forms.Form):
                 self.add_error("shipping_zip_code", "Моля попълнете полето")
             if not data.get('shipping_city', None):
                 self.add_error("shipping_city", "Моля попълнете полето")
+
+
+class AddToCartShop(forms.ModelForm):
+    quantity = forms.IntegerField(min_value=1, initial=1, disabled=True)
+
+    class Meta:
+        model = OrderItem
+        fields = ['quantity']
+
+    def __init__(self, *args, **kwargs):
+        self.product_id = kwargs.pop('product_id')
+        product = Product.objects.get(id=self.product_id)
+        super().__init__(*args, **kwargs)
+        self.fields["quantity"].label = "Количество"
+
+    def clean(self):
+        product_id = self.product_id
+        product = Product.objects.get(id=self.product_id)
+        quantity = self.cleaned_data['quantity']
+        if product.stock < quantity:
+            raise forms.ValidationError(
+                f"Максималното налично количество е: {product.stock}")

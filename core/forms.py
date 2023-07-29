@@ -47,6 +47,7 @@ class FirmForm(forms.ModelForm):
     class Meta:
         model = Firm
         fields = '__all__'
+        exclude = ['user']
         labels = {
             'name_of_firm': 'Име на Фирма',
             'bulstat': 'ЕИК',

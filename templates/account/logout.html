@@ -6,19 +6,38 @@
 
 {% block content %}
 
-
-    <div class="my_class">
-        <h1>{% trans "Изход" %}</h1>
-
-        <p>{% trans 'Сигурни ли сте, че искате да излезете от профила си?' %}</p>
-
-        <form method="post" action="{% url 'account_logout' %}">
-            {% csrf_token %}
-            {% if redirect_field_value %}
-                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-            {% endif %}
-            <button type="submit">{% trans 'Изход' %}</button>
-        </form>
+    <div class="site-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <h1>Изход</h1>
+                    <p class="mb-3 text-black">Сигурни ли сте, че искате да излезете от профила си?</p>
+                </div>
+                <div class="col-md-7">
+                    <form method="POST" action="{% url 'account_logout' %}">
+                        {% csrf_token %}
+                        {% if redirect_field_value %}
+                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                        {% endif %}
+                        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Изход"/>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
+    {#    <div class="my_class">#}
+    {#        <h1>{% trans "Изход" %}</h1>#}
+    {##}
+    {#        <p>{% trans 'Сигурни ли сте, че искате да излезете от профила си?' %}</p>#}
+    {##}
+    {#        <form method="post" action="{% url 'account_logout' %}">#}
+    {#            {% csrf_token %}#}
+    {#            {% if redirect_field_value %}#}
+    {#                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>#}
+    {#            {% endif %}#}
+    {#            <button type="submit">{% trans 'Изход' %}</button>#}
+    {#        </form>#}
+    {#    </div>#}
 
 {% endblock %}
