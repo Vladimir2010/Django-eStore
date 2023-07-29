@@ -1,4 +1,10 @@
+admin/
+core/migrations/
+cart/migrations/
+fonts/
+media/
+migr/
 db.sqlite3
 env/
-ENV/
+ecom/.env
 .idea
