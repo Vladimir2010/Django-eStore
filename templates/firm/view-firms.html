@@ -54,7 +54,7 @@
                     <td>{{ firm.address_by_registration }}</td>
                     <td>{{ firm.owner_of_firm }}</td>
                     <td>
-                        <a href="{% url 'remove-firm' %}" class="btn btn-primary btn-sm">X</a>
+                        <a href="{% url 'remove-firm' firm.id %}" class="btn btn-primary btn-sm">X</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -65,4 +65,3 @@
 
 {% endblock %}
 </body>
-</html>

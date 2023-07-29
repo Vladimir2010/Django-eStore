@@ -45,6 +45,8 @@ class AddressForm(forms.Form):
             user=user,
             address_type='S'
         )
+        if shipping_address_qs.exists():
+            shipping_address_qs.address_line_2 = ''
 
         self.fields['selected_shipping_address'].queryset = shipping_address_qs
         # labels
@@ -62,8 +64,8 @@ class AddressForm(forms.Form):
         if selected_shipping_address is None:
             if not data.get('shipping_address_line_1', None):
                 self.add_error("shipping_address_line_1", "Моля попълнете полето")
-            # if not data.get('shipping_address_line_2', None):
-            #     self.add_error("shipping_address_line_2", "Моля попълнете полето")
+            if not data.get('shipping_address_line_2', ''):
+                data['shipping_address_line_2'] = ''
             if not data.get('shipping_zip_code', None):
                 self.add_error("shipping_zip_code", "Моля попълнете полето")
             if not data.get('shipping_city', None):

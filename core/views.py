@@ -11,7 +11,7 @@ from django.core.mail import EmailMessage
 from .models import CustomUserModel, Firm
 from cart.utils import get_or_set_order_session
 
-
+# Class Based Views
 class ProfileView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'profile.html'
 
@@ -66,7 +66,7 @@ class ContactView(generic.FormView):
         # )
         return super(ContactView, self).form_valid(form)
 
-
+# Def Views
 def edit_profile_view(request):
     user = request.user
     form = EditUserForm(instance=user)
@@ -106,6 +106,14 @@ def view_firms(request):
         'user': user
     }
     return render(request, 'firm/view-firms.html', context)
+
+def remove_firm(request, firm_id):
+    firm = get_object_or_404(Firm, id=firm_id)
+    context = {
+        'firm': firm
+    }
+    firm.delete()
+    return render(request, 'firm/remove-firm.html', context)
 
 
 def update_cart_view(request, product_id):

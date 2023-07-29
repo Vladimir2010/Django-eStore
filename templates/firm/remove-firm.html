@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="site-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <h2 class="h3 mb-3 text-black">Премахване на фирма</h2>
+                <p class="mb-3 text-black">Сигурни ли сте че искате да премахнете фирмата {{ firm.name_of_firm }}?</p>
+            </div>
+            <div class="col-md-7">
+                <a href="{% url 'view-firms' %}"><button class="btn btn-primary btn-sm" type="submit">Премахване</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
