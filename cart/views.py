@@ -18,6 +18,7 @@ from .utils import get_or_set_order_session
 from reportlab.lib import (pagesizes, units)
 from reportlab.pdfgen import canvas
 from reportlab.platypus.paragraph import Paragraph
+from datetime import date
 import io
 import datetime
 import json
@@ -197,15 +198,15 @@ class ThankYouView(generic.TemplateView):
         user = self.request.user
         firm = OwnerFirm.objects.first()
         order_items = OrderItem.objects.filter(order=order)
+        date_of_order = date.today()
         data = []
-        context = {"order": order, "user": user, "order_items": order_items, "firm": firm}
+        context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order}
         html_content = render_to_string(self.template_for_email, context, request=self.request)
         emails = [email for email in settings.ADMINS]
         emails.append(settings.NOTIFY_EMAIL)
         subject = f"Поръчка: {order.order_number}"
         from_email = settings.EMAIL_HOST_USER
         recipient_list = ["vladikomputers2000@abv.bg"]
-        # print(order.ordered_date.date())
         # emails.append(user.email)
         for i in order_items:
             data.append({'product_name': i.product.title, 'quantity': i.quantity, 'price': i.product.get_price(),

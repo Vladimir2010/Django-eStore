@@ -5,41 +5,182 @@
     <title>Title</title>
 </head>
 <body>
-<div class="site-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-                <h2 class="h3 mb-3 text-black">Свържете се с нас</h2>
-            </div>
-            <div class="col-md-7">
-                <table data-layout="text-left">
+
+<div id="wrapper" style="background-color:#f7f7f7;margin:0;padding:70px 0;width:100.0%;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+        <tr>
+            <td valign="top" align="center">
+                <div id="template_header_image">
+                </div>
+                <table id="template_container"
+                       style="background-color:#ffffff;border:1px solid #dedede;box-shadow:0 1px 4px rgba(0,0,0,0.1);border-radius:3px;"
+                       width="600" cellspacing="0" cellpadding="0" border="0">
                     <tbody>
                     <tr>
-                        <td colspan="2"><span>Нова поръчка No: </span>{{ order.order_number }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="c5o2hx68t">
-                            <div data-layout="row gutter-none start">
-                                <div data-layout="col 12 8@md"><span>IBAN на получателя: </span>{{ bank.IBAN }}
-                                </div>
-                                <div data-layout="col 12 4@md"><span>BIC на получателя: </span>{{ bank.BIC }}</div>
-                            </div>
+                        <td valign="top" align="center">
+                            <table id="template_header"
+                                   style="background-color:#96588a;color:#ffffff;border-bottom:0;font-weight:bold;line-height:100.0%;vertical-align:middle;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;border-radius:3px 3px 0 0;"
+                                   width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tbody>
+                                <tr>
+                                    <td id="header_wrapper" style="padding:36px 48px;display:block;"><h1
+                                            style="font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;font-size:30px;font-weight:300;line-height:150.0%;margin:0;text-align:left;text-shadow:0 1px 0 #ab79a1;color:#ffffff;background-color:inherit;">
+                                        Нова поръчка No: {{ order.order_number }}</h1></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><span>Банка на получателя: </span>{{ bank.bank_name }}</td>
-                    </tr>
-                    <tr>
-                        <td><span>Сума: </span>{{ order.get_total }}лв.</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><span>Основание за плащане: </span>{{ order.reference_number }}</td>
+                        <td valign="top" align="center">
+                            <table id="template_body" width="600" cellspacing="0" cellpadding="0" border="0">
+                                <tbody>
+                                <tr>
+                                    <td id="body_content" style="background-color:#ffffff;" valign="top">
+                                        <table width="100%" cellspacing="0" cellpadding="20" border="0">
+                                            <tbody>
+                                            <tr>
+                                                <td style="padding:48px 48px 32px;" valign="top">
+                                                    <div id="body_content_inner"
+                                                         style="color:#636363;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;font-size:14px;line-height:150.0%;text-align:left;">
+                                                        <p style="margin:0 0 16px;">Получихте следната поръчка от
+                                                            {{ user.full_name }}</p>
+                                                        <h2 style="color:#96588a;display:block;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:130.0%;margin:0 0 18px;text-align:left;">
+                                                            <a href="https://ekafp.eu/wp-admin/post.php?post=2461&amp;action=edit"
+                                                               style="font-weight:normal;text-decoration:underline;color:#96588a;"
+                                                               target="_blank">(Поръчка No {{ order.order_number }})</a>
+                                                            ({{ order.ordered_date.date }})</h2>
+                                                        <div style="margin-bottom:40px;">
+                                                            <table style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;width:100.0%;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;"
+                                                                   cellspacing="0" cellpadding="6" border="1">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;">
+                                                                        Продукт
+                                                                    </th>
+                                                                    <th style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;">
+                                                                        Количество
+                                                                    </th>
+                                                                    <th style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;">
+                                                                        Цена
+                                                                    </th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for item in order_items %}
+                                                                    <tr>
+                                                                        <td style="color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;word-wrap:break-word;">
+                                                                            {{ item.product.title }}
+                                                                            DSB15
+                                                                        </td>
+                                                                        <td style="color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
+                                                                            {{ item.quantity }}
+                                                                        </td>
+                                                                        <td style="color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
+                                                                            <span>{{ item.get_raw_total_item_price }}&nbsp;<span>лв.</span></span>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+
+                                                                </tbody>
+                                                                <tfoot>
+                                                                <tr>
+                                                                    <th colspan="2"
+                                                                        style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;border-top-width:4px;">
+                                                                        Междинна сума:
+                                                                    </th>
+                                                                    <td style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;border-top-width:4px;">
+                                                                        <span>{{ order.get_total }}&nbsp;<span>лв.</span></span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th colspan="2"
+                                                                        style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;">
+                                                                        Начин на плащане:
+                                                                    </th>
+                                                                    <td style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;">
+                                                                        {{ order.payment_method }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th colspan="2"
+                                                                        style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;">
+                                                                        Общо:
+                                                                    </th>
+                                                                    <td style="color:#636363;border:1px solid #e5e5e5;vertical-align:middle;padding:12px;text-align:left;">
+                                                                        <span>{{ order.get_total }}&nbsp;<span>лв.</span></span>
+                                                                    </td>
+                                                                </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                        <table id="addresses"
+                                                               style="width:100.0%;vertical-align:top;margin-bottom:40px;padding:0;"
+                                                               cellspacing="0" cellpadding="0" border="0">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td style="text-align:left;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;border:0;padding:0;"
+                                                                    width="50%" valign="top"><h2
+                                                                        style="color:#96588a;display:block;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:130.0%;margin:0 0 18px;text-align:left;">
+                                                                    Адрес за доставка</h2>
+                                                                    <address
+                                                                            style="padding:12px;color:#636363;border:1px solid #e5e5e5;">
+                                                                        {{ user.full_name }}<br>{{ order.shipping_address.address_line_1 }}<br><br>{{ order.shipping_address.address_line_2 }}<br>{{ order.shipping_address.city }}<br>{{ order.shipping_address.zip_code }}<br>
+                                                                        <br>
+                                                                        <p style="color:#96588a;font-weight:normal;text-decoration:underline;"
+                                                                           target="_blank">{{ user.phone_number }}</p>
+                                                                        <br>{{ user.email }}
+                                                                    </address>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <p style="margin:0 0 16px;">Поздравления за продажбата.</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" align="center">
+                <table id="template_footer" width="600" cellspacing="0" cellpadding="10" border="0">
+                    <tbody>
+                    <tr>
+                        <td style="padding:0;border-radius:6px;" valign="top">
+                            <table width="100%" cellspacing="0" cellpadding="10" border="0">
+                                <tbody>
+                                <tr>
+                                    <td colspan="2" id="credit"
+                                        style="border-radius:6px;border:0;color:#8a8a8a;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;font-size:12px;line-height:150.0%;text-align:center;padding:24px 0;"
+                                        valign="middle"><p style="margin:0 0 16px;">Благодарим ви!<br> Екипът
+                                        на {{ firm.name_of_firm }}<br> ЕИК
+                                        {% if firm.is_vat %}{{ firm.VAT_number }}{% else %}{{ firm.bulstat }}{% endif %}
+                                        <br> {% if firm.is_have_address_shop %}{{ firm.address_of_shop}}{% else %}{% endif %}<br> GSM: {{ firm.mobile_number_of_firm }} тел: {% if firm.is_static_number_of_firm %}{{ firm.static_number_of_firm }}{% else %}{% endif %}</p>
+                                        <p style="margin:0 0 16px;">{{ firm.activity }}<br>Изработен от <a href="{% url 'home' %}"
+                                                                         style="color:#96588a;font-weight:normal;text-decoration:underline;"
+                                                                         target="_blank">Django</a></p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
