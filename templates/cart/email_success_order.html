@@ -47,7 +47,7 @@
                                                         <p style="margin:0 0 16px;">Получихте следната поръчка от
                                                             {{ user.full_name }}</p>
                                                         <h2 style="color:#96588a;display:block;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:130.0%;margin:0 0 18px;text-align:left;">
-                                                            <a href="https://ekafp.eu/wp-admin/post.php?post=2461&amp;action=edit"
+                                                            <a href="/admin"
                                                                style="font-weight:normal;text-decoration:underline;color:#96588a;"
                                                                target="_blank">(Поръчка No {{ order.order_number }})</a>
                                                             ({{ order.ordered_date.date }})</h2>
@@ -126,7 +126,10 @@
                                                                     Адрес за доставка</h2>
                                                                     <address
                                                                             style="padding:12px;color:#636363;border:1px solid #e5e5e5;">
-                                                                        {{ user.full_name }}<br>{{ order.shipping_address.address_line_1 }}<br><br>{{ order.shipping_address.address_line_2 }}<br>{{ order.shipping_address.city }}<br>{{ order.shipping_address.zip_code }}<br>
+                                                                        {{ user.full_name }}<br>{{ order.shipping_address.address_line_1 }}<br>
+                                                                        {{ order.shipping_address.address_line_2 }}<br>
+                                                                        {{ order.shipping_address.city }}<br>
+                                                                        {{ order.shipping_address.zip_code }}
                                                                         <br>
                                                                         <p style="color:#96588a;font-weight:normal;text-decoration:underline;"
                                                                            target="_blank">{{ user.phone_number }}</p>
@@ -166,10 +169,15 @@
                                         valign="middle"><p style="margin:0 0 16px;">Благодарим ви!<br> Екипът
                                         на {{ firm.name_of_firm }}<br> ЕИК
                                         {% if firm.is_vat %}{{ firm.VAT_number }}{% else %}{{ firm.bulstat }}{% endif %}
-                                        <br> {% if firm.is_have_address_shop %}{{ firm.address_of_shop}}{% else %}{% endif %}<br> GSM: {{ firm.mobile_number_of_firm }} тел: {% if firm.is_static_number_of_firm %}{{ firm.static_number_of_firm }}{% else %}{% endif %}</p>
-                                        <p style="margin:0 0 16px;">{{ firm.activity }}<br>Изработен от <a href="{% url 'home' %}"
-                                                                         style="color:#96588a;font-weight:normal;text-decoration:underline;"
-                                                                         target="_blank">Django</a></p></td>
+                                        <br> {% if firm.is_have_address_shop %}
+                                            {{ firm.address_of_shop }}{% else %}{% endif %}<br>
+                                        GSM: {{ firm.mobile_number_of_firm }} тел:
+                                        {% if firm.is_static_number_of_firm %}
+                                            {{ firm.static_number_of_firm }}{% else %}{% endif %}</p>
+                                        <p style="margin:0 0 16px;">{{ firm.activity }}<br>Изработен от <a
+                                                href="{% url 'home' %}"
+                                                style="color:#96588a;font-weight:normal;text-decoration:underline;"
+                                                target="_blank">Django</a></p></td>
                                 </tr>
                                 </tbody>
                             </table>

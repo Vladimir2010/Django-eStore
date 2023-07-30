@@ -18,7 +18,7 @@ from .utils import get_or_set_order_session
 from reportlab.lib import (pagesizes, units)
 from reportlab.pdfgen import canvas
 from reportlab.platypus.paragraph import Paragraph
-from datetime import date
+from datetime import date, timezone
 import io
 import datetime
 import json
@@ -190,6 +190,7 @@ class ConfirmOrderView(generic.View):
         return JsonResponse({"data": "Success"})
 
 
+
 class ThankYouView(generic.TemplateView):
     template_name = 'cart/thanks.html'
     template_for_email = 'cart/email_success_order.html'
@@ -199,14 +200,19 @@ class ThankYouView(generic.TemplateView):
         firm = OwnerFirm.objects.first()
         order_items = OrderItem.objects.filter(order=order)
         date_of_order = date.today()
+        date_time = datetime.datetime.now()
+        order.ordered_date = date_time
+        order.ordered = True
+        order.save()
         data = []
         context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order}
         html_content = render_to_string(self.template_for_email, context, request=self.request)
         emails = [email for email in settings.ADMINS]
         emails.append(settings.NOTIFY_EMAIL)
+        emails.append(settings.EMAIL_HOST_USER)
         subject = f"Поръчка: {order.order_number}"
         from_email = settings.EMAIL_HOST_USER
-        recipient_list = ["vladikomputers2000@abv.bg"]
+        recipient_list = emails
         # emails.append(user.email)
         for i in order_items:
             data.append({'product_name': i.product.title, 'quantity': i.quantity, 'price': i.product.get_price(),
