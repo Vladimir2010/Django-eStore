@@ -1,10 +1,11 @@
-admin/
+.idea
+__pycache__/
+ecom/__pycache__/
+core/__pycache__/
+cart/__pycache__/
+staff/__pycache__/
 core/migrations/
 cart/migrations/
-fonts/
 media/
-migr/
-db.sqlite3
 env/
 ecom/.env
-.idea

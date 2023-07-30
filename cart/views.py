@@ -58,6 +58,14 @@ class ProductDetailView(generic.FormView):
         kwargs["product_id"] = self.get_object().id
         return kwargs
 
+    def get_queryset(self):
+        qs = Product.objects.all()
+        category = self.request.GET.get('category', None)
+        if category:
+            qs = qs.filter(Q(primary_category__name=category) |
+                           Q(secondary_categories__name=category)).distinct()
+        return qs
+
     def form_valid(self, form):
         order = get_or_set_order_session(self.request)
         product = self.get_object()
@@ -80,6 +88,9 @@ class ProductDetailView(generic.FormView):
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         context['product'] = self.get_object()
+        context.update({
+            "categories": Category.objects.values("name")
+        })
         return context
 
 
@@ -190,10 +201,10 @@ class ConfirmOrderView(generic.View):
         return JsonResponse({"data": "Success"})
 
 
-
 class ThankYouView(generic.TemplateView):
     template_name = 'cart/thanks.html'
     template_for_email = 'cart/email_success_order.html'
+
     def get(self, request, *args, **kwargs):
         order = get_or_set_order_session(self.request)
         user = self.request.user
@@ -217,7 +228,7 @@ class ThankYouView(generic.TemplateView):
         for i in order_items:
             data.append({'product_name': i.product.title, 'quantity': i.quantity, 'price': i.product.get_price(),
                          'total': i.get_total_item_price()})
-        send_mail(subject, "This is the plain text content of the email.", from_email, recipient_list,
+        send_mail(subject, "Вашата поръчка е успешно поръчана", from_email, recipient_list,
                   fail_silently=False, html_message=html_content)
         return render(self.request, 'cart/thanks.html')
 

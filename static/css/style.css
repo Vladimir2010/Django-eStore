@@ -86,7 +86,7 @@ a {
 
 .site-section {
   padding: 2.5em 0; }
-  @media (min-width: 768px) {
+  @media (min-width: 1068px) {
     .site-section {
       padding: 5em 0; } }
   .site-section.site-section-sm {

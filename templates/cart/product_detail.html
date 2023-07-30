@@ -2,40 +2,55 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<div class="bg-light py-3">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 mb-0">
-                <a href="{% url 'home' %}">Начало</a>
-                <span class="mx-2 mb-0">/</span>
-                <strong class="text-black">{{ product.title }}</strong>
+    <div class="bg-light py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 mb-0">
+                    <a href="{% url 'home' %}">Начало</a>
+                    <span class="mx-2 mb-0">/</span>
+                    <strong class="text-black">{{ product.title }}</strong>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="site-section">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-md-6">
-                <img src="{{ product.image.url }}" class="img-fluid">
-            </div>
-            <div class="col-md-6">
-                <h2 class="text-black">{{ product.title }}</h2>
-                <p>{{ product.description }}</p>
-                <p>Налично количество: {{ product.stock }} бр.</p>
-                {% if product.in_stock %}
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <button type='submit' class="btn btn-sm btn-primary buy-now">Добави в количката</button>
-                </form>
-                {% else %}
-                <p>Няма в наличност</p>
-                {% endif %}
+    <div class="site-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-4">
+                    <img src="{{ product.image.url }}" class="img-fluid">
+                </div>
+                <div class="col-md-4 py-4">
+                    <h2 class="text-black">{{ product.title }}</h2>
+                    <p>{{ product.description }}</p>
+                    <p>Налично количество: {{ product.stock }} бр.</p>
+                    {% if product.in_stock %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type='submit' class="btn btn-sm btn-primary buy-now">Добави в количката</button>
+                        </form>
+                    {% else %}
+                        <p>Няма наличност</p>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="border p-4 rounded mb-4">
+                        <h3 class="h6 text-uppercase text-black">Категории</h3>
+                        <ul>
+                            {% for category in categories %}
+                                <li class="mb-1">
+                                    <a href="?category={{ category.name }}" class="d-flex">
+                                        <span>{{ category.name }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock content %}
