@@ -75,7 +75,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-ADMINS = ["saitma@abv.bg", "vladikomputers2000@abv.bg" ]
+ADMINS = ["saitma@abv.bg", "vladikomputers2000@abv.bg"]
 
 # URLS
 ROOT_URLCONF = 'ecom.urls'

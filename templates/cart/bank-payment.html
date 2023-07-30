@@ -31,33 +31,32 @@
     {##}
     {#        }#}
     {#    </style>#}
-{#    <table id="table" data-layout="text-left">#}
-{#        <tbody>#}
-{#        <tr>#}
-{#            <td colspan="2"><span>Име на получателя: </span>{{ bank.get_full_name }}</td>#}
-{#        </tr>#}
-{#        <tr>#}
-{#            <td colspan="2" class="c5o2hx68t">#}
-{#                <div data-layout="row gutter-none start">#}
-{#                    <div data-layout="col 12 8@md"><span>IBAN на получателя: </span>{{ bank.IBAN }}</div>#}
-{#                    <div data-layout="col 12 4@md"><span>BIC на получателя: </span>{{ bank.BIC }}</div>#}
-{#                </div>#}
-{#            </td>#}
-{#        </tr>#}
-{#        <tr>#}
-{#            <td colspan="2"><span>Банка на получателя: </span>{{ bank.bank_name }}</td>#}
-{#        </tr>#}
-{#        <tr>#}
-{#            <td><span>Сума: </span>{{ order.get_total }}лв.</td>#}
-{#        </tr>#}
-{#        <tr>#}
-{#            <td colspan="2"><span>Основание за плаща: </span>{{ order.reference_number }}</td>#}
-{#        </tr>#}
-{#        </tbody>#}
-{#    </table>#}
+    {#    <table id="table" data-layout="text-left">#}
+    {#        <tbody>#}
+    {#        <tr>#}
+    {#            <td colspan="2"><span>Име на получателя: </span>{{ bank.get_full_name }}</td>#}
+    {#        </tr>#}
+    {#        <tr>#}
+    {#            <td colspan="2" class="c5o2hx68t">#}
+    {#                <div data-layout="row gutter-none start">#}
+    {#                    <div data-layout="col 12 8@md"><span>IBAN на получателя: </span>{{ bank.IBAN }}</div>#}
+    {#                    <div data-layout="col 12 4@md"><span>BIC на получателя: </span>{{ bank.BIC }}</div>#}
+    {#                </div>#}
+    {#            </td>#}
+    {#        </tr>#}
+    {#        <tr>#}
+    {#            <td colspan="2"><span>Банка на получателя: </span>{{ bank.bank_name }}</td>#}
+    {#        </tr>#}
+    {#        <tr>#}
+    {#            <td><span>Сума: </span>{{ order.get_total }}лв.</td>#}
+    {#        </tr>#}
+    {#        <tr>#}
+    {#            <td colspan="2"><span>Основание за плаща: </span>{{ order.reference_number }}</td>#}
+    {#        </tr>#}
+    {#        </tbody>#}
+    {#    </table>#}
 
     {#    <a href="#"><button class="btn btn-primary btn-block btn-lg" id="submitBtn">Приключи Поръчката</button></a>#}
-    <a href="#"><input type="submit" class="btn btn-primary btn-lg btn-block" value="Приключи Поръчката"/></a>
 
 
     <div class="site-section">
@@ -88,10 +87,13 @@
                             <td><span>Сума: </span>{{ order.get_total }}лв.</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><span>Основание за плаща: </span>{{ order.reference_number }}</td>
+                            <td colspan="2"><span>Основание за плащане: </span>{{ order.reference_number }}</td>
                         </tr>
                         </tbody>
                     </table>
+                    <a href="{% url 'cart:thank-you' %}"><input type="submit" class="btn btn-primary btn-lg btn-block"
+                                       value="Приключи Поръчката"/></a>
+
                 </div>
             </div>
         </div>

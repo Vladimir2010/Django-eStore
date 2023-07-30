@@ -99,12 +99,26 @@ class Order(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField(blank=True, null=True)
     ordered = models.BooleanField(default=False)
+    payment_method = models.CharField(max_length=15,
+                                      choices=(
+                                          ('Наложен платеж', 'Наложен платеж'),
+                                          ('Банков път', 'Банков път')),
+                                      null=True,
+                                      blank=True)
 
     shipping_address = models.ForeignKey(
         Address, related_name='shipping_address', blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.reference_number
+
+    @property
+    def get_payment_method(self):
+        return self.payment_method
+
+    @property
+    def order_number(self):
+        return self.pk
 
     @property
     def reference_number(self):
@@ -140,10 +154,9 @@ class Payment(models.Model):
         ('Наложен платеж', 'Наложен платеж'),
         ('Банков път', 'Банков път'),
     ))
-    timestamp = models.DateTimeField(auto_now_add=True)
+    date_of_payment = models.DateTimeField(auto_now_add=True)
     successful = models.BooleanField(default=False)
     amount = models.FloatField()
-    raw_response = models.TextField()
 
     def __str__(self):
         return self.reference_number
@@ -174,6 +187,7 @@ class BankAccount(models.Model):
         if self.get_is_firm:
             return self.first_name
         return f"{self.first_name} {self.last_name}"
+
     @property
     def get_name(self):
         if self.get_is_firm:
@@ -189,4 +203,3 @@ class BankAccount(models.Model):
 
     def __str__(self):
         return self.get_name
-

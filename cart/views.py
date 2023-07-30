@@ -1,24 +1,26 @@
-from django.http import HttpResponse
-import datetime
-import json
+from django.http import HttpResponse, JsonResponse, FileResponse
 from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, reverse, redirect, render
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from .forms import AddToCartForm, AddressForm
+from django.core import mail
+from django.core.mail import EmailMessage
 from .models import Product, OrderItem, Address, Payment, Order, Category, BankAccount
+from core.models import OwnerFirm
 from .utils import get_or_set_order_session
-from django.http import FileResponse
-from reportlab.lib.units import inch
-import io
+from reportlab.lib import (pagesizes, units)
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 from reportlab.platypus.paragraph import Paragraph
+import io
+import datetime
+import json
 
 
 class ProductListView(generic.ListView):
@@ -90,7 +92,8 @@ class CartView(generic.TemplateView):
 
 
 class IncreaseQuantityView(generic.View):
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request, *args, **kwargs):
         order_item = get_object_or_404(OrderItem, id=kwargs['pk'])
         order_item.quantity += 1
         order_item.save()
@@ -98,7 +101,8 @@ class IncreaseQuantityView(generic.View):
 
 
 class DecreaseQuantityView(generic.View):
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request, *args, **kwargs):
         order_item = get_object_or_404(OrderItem, id=kwargs['pk'])
         if order_item.quantity <= 1:
             order_item.delete()
@@ -109,7 +113,8 @@ class DecreaseQuantityView(generic.View):
 
 
 class RemoveFromCartView(generic.View):
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request, *args, **kwargs):
         order_item = get_object_or_404(OrderItem, id=kwargs['pk'])
         order_item.delete()
         return redirect("cart:summary")
@@ -126,7 +131,6 @@ class CheckoutView(LoginRequiredMixin, generic.FormView):
         order = get_or_set_order_session(self.request)
         selected_shipping_address = form.cleaned_data.get(
             'selected_shipping_address')
-
 
         if selected_shipping_address:
             order.shipping_address = selected_shipping_address
@@ -168,16 +172,17 @@ class PaymentView(LoginRequiredMixin, generic.TemplateView):
 
 
 class ConfirmOrderView(generic.View):
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request, *args, **kwargs):
         order = get_or_set_order_session(request)
-        body = json.loads(request.body)
-        payment = Payment.objects.create(
-            order=order,
-            successful=True,
-            raw_response=json.dumps(body),
-            amount=float(body["purchase_units"][0]["amount"]["value"]),
-            payment_method='Наложен платеж',
-        )
+        # body = json.loads(request.body)
+        # payment = Payment.objects.create(
+        #     order=order,
+        #     successful=True,
+        #     raw_response=json.dumps(body),
+        #     amount=float(body["purchase_units"][0]["amount"]["value"]),
+        #     payment_method='Наложен платеж',
+        # )
         order.ordered = True
         order.ordered_date = datetime.date.today()
         order.save()
@@ -186,6 +191,28 @@ class ConfirmOrderView(generic.View):
 
 class ThankYouView(generic.TemplateView):
     template_name = 'cart/thanks.html'
+    template_for_email = 'cart/email_success_order.html'
+    def get(self, request, *args, **kwargs):
+        order = get_or_set_order_session(self.request)
+        user = self.request.user
+        firm = OwnerFirm.objects.first()
+        order_items = OrderItem.objects.filter(order=order)
+        data = []
+        context = {"order": order, "user": user, "order_items": order_items, "firm": firm}
+        html_content = render_to_string(self.template_for_email, context, request=self.request)
+        emails = [email for email in settings.ADMINS]
+        emails.append(settings.NOTIFY_EMAIL)
+        subject = f"Поръчка: {order.order_number}"
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = ["vladikomputers2000@abv.bg"]
+        # print(order.ordered_date.date())
+        # emails.append(user.email)
+        for i in order_items:
+            data.append({'product_name': i.product.title, 'quantity': i.quantity, 'price': i.product.get_price(),
+                         'total': i.get_total_item_price()})
+        send_mail(subject, "This is the plain text content of the email.", from_email, recipient_list,
+                  fail_silently=False, html_message=html_content)
+        return render(self.request, 'cart/thanks.html')
 
 
 class OrderDetailView(LoginRequiredMixin, generic.DetailView):
@@ -194,17 +221,19 @@ class OrderDetailView(LoginRequiredMixin, generic.DetailView):
     context_object_name = 'order'
 
 
-def bank_payment(request):
-    bank = BankAccount.objects.first()
-    print(bank)
-    order = get_or_set_order_session(request)
-    print(order)
-    context = {
-        'bank': bank,
-        'order': order
-    }
+class BankPayment(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'cart/bank-payment.html'
 
-    return render(request, 'cart/bank-payment.html', context)
+    def get(self, request, *args, **kwargs):
+        bank = BankAccount.objects.first()
+        order = get_or_set_order_session(self.request)
+        order.payment_method = "Банков път"
+        context = {
+            'bank': bank,
+            'order': order
+        }
+        return render(self.request, 'cart/bank-payment.html', context)
+
 
 #
 # def pdf_invoice(request):
@@ -239,4 +268,4 @@ def bank_payment(request):
 #     return FileResponse(buffer, as_attachment=True, filename='invoice.pdf')
 
 def search_view(request):
-    form = Pr
+    pass
