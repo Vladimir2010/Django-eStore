@@ -7,6 +7,18 @@
             {% if request.user.is_staff %}
                 <li><a href="{% url 'staff:staff' %}">Персонал</a></li>
             {% endif %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                   href="{% url 'cart:product-list' %}" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup=" true" aria-expanded="false">
+                Магазин
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% for category in categories %}
+                        <li><a class="dropdown-item" href="/cart/shop/?category={{ category.name }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
         </ul>
     </div>
 </nav>

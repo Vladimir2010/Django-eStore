@@ -10,9 +10,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" type="image/jpg" href="{% static 'images/logo.jpg' %}">
     <link rel="manifest" href="{% static 'icons/manifest.json' %}">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .nav-item:hover .dropdown-menu {
+            display: block;
+        }
+    </style>
     <meta name="msapplication-TileColor" content="#ffffff">
-{#    <meta name="msapplication-TileImage" content="{% static 'icons/ms-icon-144x144.png' %}">#}
+    {#    <meta name="msapplication-TileImage" content="{% static 'icons/ms-icon-144x144.png' %}">#}
     <meta name="theme-color" content="#ffffff">
     <script src="https://kit.fontawesome.com/6eb3cdecef.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
@@ -24,8 +29,8 @@
     <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/aos.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"#}
-{#          integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"/>#}
+    {#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"#}
+    {#          integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"/>#}
 </head>
 
 <body>
@@ -46,10 +51,11 @@
                     <div class="col-6 col-md-4 order-3 order-md-3 text-right">
                         <div class="site-top-icons">
                             <ul>
-{#                                <i class="fas fa-user"></i>#}
+                                {#                                <i class="fas fa-user"></i>#}
                                 <li>
                                     {% if request.user.is_authenticated %}
-                                        <a href="{% url 'profile' %}"><span><i class="fa-solid fa-circle-user fa-2xl"></i></span></a>
+                                        <a href="{% url 'profile' %}"><span><i
+                                                class="fa-solid fa-circle-user fa-2xl"></i></span></a>
                                     {% else %}
                                         <a href="{% url 'account_login' %}"><span><i
                                                 class="fas fa-sign-in-alt fa-2xl"></i></span></a>

@@ -124,15 +124,20 @@ def remove_firm(request, firm_id):
 def update_cart_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     order = get_or_set_order_session(request)
-
     if OrderItem.objects.filter(product=product, order=order).exists():
         order_item = OrderItem.objects.get(product=product, order=order)
-        order_item.quantity += 1
-        order_item.save()
+        if order_item.product.stock < order_item.quantity + 1:
+            pass
+        else:
+            order_item.quantity += 1
+            order_item.save()
     else:
         order_item = OrderItem.objects.create(product=product, order=order)
-        order_item.quantity = 1
-        order_item.save()
+        if order_item.product.stock < 1:
+            pass
+        else:
+            order_item.quantity = 1
+            order_item.save()
 
     return redirect("cart:summary")
 

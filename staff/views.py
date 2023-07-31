@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import reverse
 from django.views import generic
 from cart.models import Order, Product
-from .forms import ProductForm
+from .forms import ProductForm, CreateCategoryForm
 from .mixins import StaffUserMixin
 
 
@@ -33,7 +33,7 @@ class ProductCreateView(LoginRequiredMixin, StaffUserMixin, generic.CreateView):
 
 
 class ProductUpdateView(LoginRequiredMixin, StaffUserMixin, generic.UpdateView):
-    template_name = 'staff/product_create.html'
+    template_name = 'staff/product_update.html'
     form_class = ProductForm
     queryset = Product.objects.all()
 
@@ -51,3 +51,16 @@ class ProductDeleteView(LoginRequiredMixin, StaffUserMixin, generic.DeleteView):
 
     def get_success_url(self):
         return reverse("staff:product-list")
+
+
+
+class CategoryCreateView(LoginRequiredMixin, StaffUserMixin, generic.CreateView):
+    template_name = 'staff/create_category.html'
+    form_class = CreateCategoryForm
+
+    def get_success_url(self):
+        return reverse("staff:product-list")
+
+    def form_valid(self, form):
+        form.save()
+        return super(CategoryCreateView, self).form_valid(form)

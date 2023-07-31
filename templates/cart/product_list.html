@@ -5,16 +5,31 @@
     <div class="bg-light py-3">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 mb-1\0">
+                <div class="col-md-5 mb-0">
                     <a href="{% url 'home' %}">Начало</a>
                     <span class="mx-2 mb-0">/</span>
                     <strong class="text-black">Магазин</strong>
+                </div>
+                <div class="float-right">
+                    <div class="float-right">
+                        <div class="row justify-content-center float-fight">
+                            <div class="col-sm-6 float-right">
+                                <h2 class="h3 mb-3 text-black float-right">Търсете продукти</h2>
+                            </div>
+                            <div class="col-md-7 float-right">
+                                <form method="GET" action="{% url 'cart:search_products' %}">
+                                    <input class="float-right" type="text" name="q" placeholder="Търсете продукти...">
+                                    <button class="float-right btn btn-primary btn-secondary" style="margin-top: 10px" type="submit">Търси</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {% include 'cart/serach.html' %}
+
 
     <div class="site-section">
         <div class="container">

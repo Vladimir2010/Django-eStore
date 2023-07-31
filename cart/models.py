@@ -48,8 +48,7 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
-    primary_category = models.ForeignKey(
-        Category, related_name='primary_products', blank=True, null=True, on_delete=models.CASCADE)
+    primary_category = models.ForeignKey(Category, related_name='primary_products', blank=True, null=True, on_delete=models.CASCADE)
     secondary_categories = models.ManyToManyField(Category, blank=True)
     stock = models.IntegerField(default=0)
 

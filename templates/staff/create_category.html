@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+<body>
+{% block content %}
+    <div class="site-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <h2 class="h3 mb-3 text-black">Създайте категория</h2>
+                </div>
+                <div class="col-md-7">
+                    <form method="POST" action="{% url 'staff:category-create' %}">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Създай"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+</body>
+</html>

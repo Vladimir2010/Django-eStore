@@ -2,45 +2,51 @@
 
 {% block content %}
 
-<div class="site-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <a href="{% url 'profile' %}">Върни се в профила</a>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Поръчка: #{{ order.reference_number }}
-                        </h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Поърачана на: {{ order.ordered_date }}</h6>
-                        <hr />
-                        <div class="site-blocks-table">
-                            <table class="table">
-                                <thead>
+    <div class="site-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <a href="{% url 'profile' %}">Върни се в профила</a>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Поръчка: #{{ order.reference_number }}
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Поърачана на: {{ order.ordered_date }}</h6>
+                            <hr/>
+                            <p class="card-text h6">{{ order.user.first_name }} {{ order.user.last_name }}</p>
+                            <p class="card-text h6">{{ order.user.email }}</p>
+                            <p class="card-text h6">{{ order.user.phone }}</p>
+                            <p class="card-text h6">{{ order.shipping_address }}</p>
+                            <div class="site-blocks-table">
+                                <table class="table">
+                                    <thead>
                                     <tr>
-                                        <th>Продукт.</th>
+                                        <th>Продукт</th>
                                         <th>Общо</th>
+                                        <th></th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     {% for item in order.items.all %}
-                                    <tr>
-                                        <td>{{ item.product.title }} x {{ item.quantity }}</td>
-                                        <td>{{ item.get_total_item_price }}лв.</td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{ item.product.image_url }}</td>
+                                            <td>{{ item.product.title }} x {{ item.quantity }}</td>
+                                            <td>{{ item.get_total_item_price }}лв.</td>
+                                        </tr>
                                     {% endfor %}
                                     <tr>
                                         <td>Общо</td>
                                         <td>{{ order.get_total }}лв.</td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock content %}

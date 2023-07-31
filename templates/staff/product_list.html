@@ -2,96 +2,99 @@
 
 {% block content %}
 
-<div class="site-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <h2 class="text-black">Портал за Служители - Продукти</h2>
-                <a href="{% url 'staff:product-create' %}">Създай Продукт</a>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="site-blocks-table">
-                            <table class="table">
-                                <thead>
+    <div class="site-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <h2 class="text-black">Портал за Служители - Продукти</h2>
+                    <a href="{% url 'staff:product-create' %}">Създай Продукт</a>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="site-blocks-table">
+                                <table class="table">
+                                    <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Име.</th>
                                         <th>Цена</th>
                                         <th>Действия</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     {% for product in products %}
-                                    <tr>
-                                        <td>{{ product.title }}</td>
-                                        <td>{{ product.get_price }}лв.</td>
-                                        <td>
-                                            <a href="{{ product.get_update_url }}">Промени</a>
-                                            <a tabindex="0" class="btn btn-sm btn-primary" role='button'
-                                                data-html='true' data-toggle='popover' data-trigger='focus'
-                                                title='Сигурни ли сте, че искате да изтриете този продукт?'
-                                                data-content="<a href='{{ product.get_delete_url }}'>Потвърди</a>">
-                                                X
-                                            </a>
+                                        <tr>
+                                            <td><a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}" width="100" height="100" alt="" }}"></a></td>
+                                            <td><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></td>
+                                            <td>{{ product.get_price }}лв.</td>
+                                            <td>
+                                                <a href="{{ product.get_update_url }}">Промени</a>
+                                                <a tabindex="0" class="btn btn-sm btn-primary" role='button'
+                                                   data-html='true' data-toggle='popover' data-trigger='focus'
+                                                   title='Сигурни ли сте, че искате да изтриете този продукт?'
+                                                   data-content="<a href='{{ product.get_delete_url }}'>Потвърди</a>">
+                                                    X
+                                                </a>
 
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
                                     {% empty %}
-                                    <tr>
-                                        <td colspan="3">Нямате продукти</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="3">Нямате продукти</td>
+                                        </tr>
                                     {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </tbody>
+                                </table>
+                            </div>
 
-                        {% if page_obj.has_other_pages %}
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <div class="site-block-27">
-                                    <ul>
-                                        {% if page_obj.has_previous %}
-                                            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-                                        {% else %}
-                                            <li class='disabled'><span>&laquo;</span></li>
-                                        {% endif %}
+                            {% if page_obj.has_other_pages %}
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <div class="site-block-27">
+                                            <ul>
+                                                {% if page_obj.has_previous %}
+                                                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class='disabled'><span>&laquo;</span></li>
+                                                {% endif %}
 
-                                        {% for i in paginator.page_range %}
-                                            {% if page_obj.number == i %}
-                                                <li class='active'>
+                                                {% for i in paginator.page_range %}
+                                                    {% if page_obj.number == i %}
+                                                        <li class='active'>
                                                     <span>
                                                     {{ i }}
                                                      <span class='sr-only'>(current)</span>
                                                     </span>
-                                                </li>
-                                            {% else %}
-                                                <li><a href="?page={{ i }}">{{ i }}</a></li>
-                                            {% endif %}
-                                        {% endfor %}
+                                                        </li>
+                                                    {% else %}
+                                                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                                    {% endif %}
+                                                {% endfor %}
 
-                                        {% if page_obj.has_next %}
-                                            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-                                        {% else %}
-                                            <li class='disabled'><span>&raquo;</span></li>
-                                        {% endif %}
-                                    </ul>
+                                                {% if page_obj.has_next %}
+                                                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                                                {% else %}
+                                                    <li class='disabled'><span>&raquo;</span></li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        {% endif %}
+                            {% endif %}
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock content %}
 
 {% block scripts %}
-<script>
-    $(function () {
-        $("[data-toggle=popover]").popover();
-    });
-</script>
+    <script>
+        $(function () {
+            $("[data-toggle=popover]").popover();
+        });
+    </script>
 {% endblock scripts %}

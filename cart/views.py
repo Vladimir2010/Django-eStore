@@ -214,7 +214,10 @@ class ThankYouView(generic.TemplateView):
         date_time = datetime.datetime.now()
         order.ordered_date = date_time
         order.ordered = True
+        order.payment_method = 'Банков път'
         order.save()
+        for order_item in order_items:
+            order_item.product.stock -= order_item.quantity
         data = []
         context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order}
         html_content = render_to_string(self.template_for_email, context, request=self.request)

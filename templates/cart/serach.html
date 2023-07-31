@@ -2,13 +2,13 @@
 
 <body>
 {% block content %}
-    <div class="site-section">
+    <div class="site-section float-right">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-7">
-                    <h2 class="h3 mb-3 text-black">Търсете продукти</h2>
+            <div class="row justify-content-center float-fight" style="float:right">
+                <div class="col-sm-6 float-right">
+                    <h2 class="h3 mb-3 text-black float-right">Търсете продукти</h2>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-7 float-right">
                     <form method="GET" action="{% url 'cart:search_products' %}">
                         <input type="text" name="q" placeholder="Търсете продукти...">
                         <button type="submit">Търси</button>
@@ -19,4 +19,3 @@
     </div>
 {% endblock %}
 </body>
-</html>

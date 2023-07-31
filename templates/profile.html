@@ -83,7 +83,7 @@
                                                 <a href="{% url 'cart:order-detail' order.pk %}">#{{ order.reference_number }}</a>
                                             </td>
                                             <td>{{ order.ordered_date }}</td>
-                                            <td>${{ order.get_total }}</td>
+                                            <td>{{ order.get_total }}лв.</td>
                                             <td>{% if order.ordered %}Да{% else %}Не{% endif %}</td>
                                         </tr>
                                     {% empty %}
