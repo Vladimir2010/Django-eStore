@@ -20,6 +20,7 @@ class ContactForm(forms.Form):
         self.fields['email'].label = "Имейл"
         self.fields['message'].label = "Съобщение"
 
+
 class CustomSignupForm(SignupForm):
     email = forms.EmailField(max_length=254, label='Имейл', widget=forms.TextInput(attrs={
         'placeholder': "Имейл"}))
@@ -47,7 +48,7 @@ class FirmForm(forms.ModelForm):
     class Meta:
         model = Firm
         fields = '__all__'
-        exclude = ['user']
+        exclude = ['user', 'is_deleted']
         labels = {
             'name_of_firm': 'Име на Фирма',
             'bulstat': 'ЕИК',
@@ -116,4 +117,45 @@ class EditUserForm(forms.ModelForm):
                 }
             ),
 
+        }
+
+
+class EditFirmForm(forms.ModelForm):
+    class Meta:
+        model = Firm
+        fields = '__all__'
+        exclude = ['user', 'is_deleted']
+        labels = {
+            'name_of_firm': 'Име на Фирма',
+            'bulstat': 'ЕИК',
+            'VAT_number': 'Номер по ЗДДС (по избор)',
+            'address_by_registration': 'Адрес на фирма по регистрация',
+            'owner_of_firm': 'МОЛ',
+        }
+        widgets = {
+            'name_of_firm': forms.TextInput(
+                attrs={
+                    'placeholder': 'Име на Фирма',
+                }
+            ),
+            'bulstat': forms.TextInput(
+                attrs={
+                    'placeholder': 'ЕИК',
+                }
+            ),
+            'VAT_number': forms.TextInput(
+                attrs={
+                    'placeholder': 'Номер по ЗДДС (по избор)',
+                }
+            ),
+            'address_by_registration': forms.TextInput(
+                attrs={
+                    'placeholder': 'Адрес на фирма по регистрация',
+                }
+            ),
+            'owner_of_firm': forms.TextInput(
+                attrs={
+                    'placeholder': 'МОЛ',
+                }
+            )
         }

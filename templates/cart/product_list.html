@@ -5,7 +5,7 @@
     <div class="bg-light py-3">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 mb-0">
+                <div class="col-md-12 mb-1\0">
                     <a href="{% url 'home' %}">Начало</a>
                     <span class="mx-2 mb-0">/</span>
                     <strong class="text-black">Магазин</strong>
@@ -13,6 +13,8 @@
             </div>
         </div>
     </div>
+
+    {% include 'cart/serach.html' %}
 
     <div class="site-section">
         <div class="container">
@@ -23,7 +25,8 @@
                             <div class="col-sm-6 col-md-6 col-lg-4 mb-4" data-aos='fade-up'>
                                 <figure class="block-4-image">
                                     <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}"
-                                                                                  class="img-fluid"></a>
+                                                                                  class="img-fluid"
+                                                                                  title="{{ product.title }}"></a>
                                 </figure>
 
                                 <div class="block-4-text p-4">
@@ -33,7 +36,9 @@
                                     <p class="mb-0">{{ product.description }}</p>
                                     <p class="mb-0">{{ product.price|floatformat:2 }}</p>
                                     <a href="{% url 'update-cart' product.id %}">
-                                        <button type='submit' class="btn btn-sm btn-primary buy-now">Добави в количката</button>
+                                        <button type='submit' class="btn btn-sm btn-primary buy-now">Добави в
+                                            количката
+                                        </button>
                                     </a>
                                 </div>
                             </div>
@@ -46,7 +51,7 @@
                         <ul>
                             {% for category in categories %}
                                 <li class="mb-1">
-                                    <a href="?category={{ category.name }}" class="d-flex">
+                                    <a href="/cart/shop/?category={{ category.name }}" class="d-flex">
                                         <span>{{ category.name }}</span>
                                     </a>
                                 </li>

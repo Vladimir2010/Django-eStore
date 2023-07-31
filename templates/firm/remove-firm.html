@@ -1,17 +1,62 @@
 {% extends 'base.html' %}
+<style>
+    #info-message {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
 
+</style>
 {% block content %}
     <div class="site-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-                <h2 class="h3 mb-3 text-black">Премахване на фирма</h2>
-                <p class="mb-3 text-black">Сигурни ли сте че искате да премахнете фирмата {{ firm.name_of_firm }}?</p>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <h2 class="h3 mb-3 text-black">Премахване на фирма</h2>
+                    <p class="mb-3 text-black">Сигурни ли сте че искате да премахнете
+                        фирмата {{ firm.name_of_firm }}?</p>
+                </div>
+                <div class="col-md-7">
+                    <a href="{% url 'view-firms' %}">
+                        <button class="btn btn-primary btn-sm" type="submit">Премахване</button>
+                    </a>
+                </div>
             </div>
-            <div class="col-md-7">
-                <a href="{% url 'view-firms' %}"><button class="btn btn-primary btn-sm" type="submit">Премахване</button></a>
+            <div class="col-md-7" id="info-message">
+                <p>Изтрихте фирмата {{ firm.name_of_firm }}</p>
+                <button onclick="hideInfoMessage()">Затвори</button>
             </div>
         </div>
     </div>
-</div>
+    <script>
+        function showInfoMessage() {
+            var infoMessage = document.getElementById('info-message');
+            infoMessage.style.display = 'block';
+        }
+
+        function hideInfoMessage() {
+            var infoMessage = document.getElementById('info-message');
+            infoMessage.style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            showInfoMessage();
+        });
+    </script>
+    <div class="woocommerce-notices-wrapper">
+        <div class="woocommerce-message" role="alert">
+            „{{ firm.name_of_firm }}“ е премахнат. <a
+                href="https://ekafp.eu/%d0%ba%d0%be%d0%bb%d0%b8%d1%87%d0%ba%d0%b0/?undo_item=eba0dc302bcd9a273f8bbb72be3a687b&amp;_wpnonce=a29f80165c"
+                class="restore-item">Отмяна?</a></div>
+    </div>
 {% endblock %}
+
+
+
+

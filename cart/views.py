@@ -286,4 +286,15 @@ class BankPayment(LoginRequiredMixin, generic.TemplateView):
 #     return FileResponse(buffer, as_attachment=True, filename='invoice.pdf')
 
 def search_view(request):
-    pass
+    query = request.GET.get('q')
+    if query == '':
+        object_list = Product.objects.all()
+    else:
+        object_list = Product.objects.filter(title__icontains=query)
+    product_list = Product.objects.all()
+    categories = Category.objects.values("name")
+    context = {
+        'object_list': object_list,
+        'categories': categories
+    }
+    return render(request, 'cart/product_list.html', context)

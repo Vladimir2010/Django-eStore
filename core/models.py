@@ -55,6 +55,7 @@ class Firm(models.Model):
     VAT_number = models.CharField(max_length=11, unique=True, null=True, blank=True)
     address_by_registration = models.CharField(max_length=200)
     owner_of_firm = models.CharField(max_length=100)
+    is_deleted = models.BooleanField(default=False)
 
     @property
     def is_vat(self):

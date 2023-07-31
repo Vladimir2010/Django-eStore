@@ -2,6 +2,7 @@
 import os
 import environ
 import allauth
+import jazzmin
 from dotenv import load_dotenv
 import crispy_bootstrap4
 from django.utils.translation import gettext_lazy as _
@@ -36,6 +37,7 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
 # INSTALLED APPS
 INSTALLED_APPS = [
     # Base
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,7 +55,8 @@ INSTALLED_APPS = [
     # My Apps
     'cart',
     'core',
-    'staff'
+    'staff',
+
 ]
 
 # MIDDLEWARES

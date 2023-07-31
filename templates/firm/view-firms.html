@@ -2,38 +2,6 @@
 
 <body>
 {% block content %}
-    {##}
-    {#    <table>#}
-    {#        <thead>#}
-    {#        <tr>#}
-    {#            <th>Име на фирма</th>#}
-    {#            <th>ЕИК</th>#}
-    {#            <th>Номер по ЗДДС</th>#}
-    {#            <th>Адрес по регистрация</th>#}
-    {#            <th>МОЛ</th>#}
-    {#        </tr>#}
-    {#        </thead>#}
-    {#        <tbody>#}
-    {#        {% for firm in firms %}#}
-    {#            <tr>#}
-    {#                <td>Име на фирма: {{ firm.name_of_firm }}</td>#}
-    {#                <th>ЕИК</th>#}
-    {#                <th>Номер по ЗДДС</th>#}
-    {#                <th>Адрес по регистрация</th>#}
-    {#                <th>МОЛ</th>#}
-    {##}
-    {#                <td>{{ firm.bulstat }}</td>#}
-    {#                {% if firm.is_vat %}#}
-    {#                    <td>{{ firm.VAT_number }}</td>{% else %}#}
-    {#                    <td></td>{% endif %}#}
-    {#                <td>{{ firm.address_by_registration }}</td>#}
-    {#                <td>{{ firm.owner_of_firm }}</td>#}
-    {#            </tr>#}
-    {#        {% endfor %}#}
-    {#        </tbody>#}
-    {#    </table>#}
-
-
     <div class="site-blocks-table">
         <table style="margin-left: auto; margin-right: auto">
             <thead>
@@ -50,11 +18,18 @@
                 <tr>
                     <td>{{ firm.name_of_firm }}</td>
                     <td>{{ firm.bulstat }}</td>
-                    {% if firm.is_vat %}<td>{{ firm.VAT_number }}</td>{% else %}<td></td>{% endif %}
+                    {% if firm.is_vat %}
+                        <td>{{ firm.VAT_number }}</td>{% else %}
+                        <td></td>{% endif %}
                     <td>{{ firm.address_by_registration }}</td>
                     <td>{{ firm.owner_of_firm }}</td>
                     <td>
                         <a href="{% url 'remove-firm' firm.id %}" class="btn btn-primary btn-sm">X</a>
+                        <br>
+                        <br>
+                        <a href="{% url 'edit-firms' firm.id %}">
+                            <button class="float-right btn btn-sm btn-primary">Редактирайте фирмата</button>
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
