@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Title</title>#}
-{#</head>#}
 <body>
 
 <div id="wrapper" style="background-color:#f7f7f7;margin:0;padding:70px 0;width:100.0%;">
@@ -72,13 +68,12 @@
                                                                     <tr>
                                                                         <td style="color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;word-wrap:break-word;">
                                                                             {{ item.product.title }}
-                                                                            DSB15
                                                                         </td>
                                                                         <td style="color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
                                                                             {{ item.quantity }}
                                                                         </td>
                                                                         <td style="color:#636363;border:1px solid #e5e5e5;padding:12px;text-align:left;vertical-align:middle;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
-                                                                            <span>{{ item.get_raw_total_item_price }}&nbsp;<span>лв.</span></span>
+                                                                            <span>{{ item.get_raw_total_item_price|floatformat:2 }}</span>&nbsp;<span>лв.</span></span>
                                                                         </td>
                                                                     </tr>
                                                                 {% endfor %}

@@ -13,9 +13,13 @@
                                 {{ request.user.email }}
                             </h5>
                             <hr/>
-                            <a href="{% url 'staff:product-list' %}">Продукти</a> <a href="{% url 'staff:category-create' %}">
+                            <a href="{% url 'staff:product-list' %}">
+                                <button class="float-left btn btn-sm btn-primary">Продукти</button>
+                            </a> <br> <br> <a href="{% url 'staff:category-create' %}">
                             <button class="float-left btn btn-sm btn-primary">Създай Категория</button>
-                            </a>
+                        </a>
+                            <br>
+                            <br>
                             <hr/>
 
                             <h5 class="card-title">Последни поръчки</h5>

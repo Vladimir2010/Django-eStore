@@ -23,7 +23,7 @@
                                     <tbody>
                                     {% for product in products %}
                                         <tr>
-                                            <td><a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}" width="100" height="100" alt="" }}"></a></td>
+                                            <td><a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}" width="100" height="100""></a></td>
                                             <td><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></td>
                                             <td>{{ product.get_price }}лв.</td>
                                             <td>

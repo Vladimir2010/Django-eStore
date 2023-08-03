@@ -2,23 +2,24 @@
     <div class="container">
         <ul class="site-menu js-clone-nav d-none d-md-block" style="padding: 0;">
             <li><a href="{% url 'home' %}">Начало</a></li>
-            <li><a href="{% url 'cart:product-list' %}">Магазин</a></li>
+            {% if categories %}
+                <li class="nav-item dropdown">
+                        <button onclick="window.location.href='/cart/shop'">Магазин</button>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% for category in categories %}
+                            <li><a class="dropdown-item"
+                                   href="/cart/shop/?category={{ category.name }}">{{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% else %}
+                <li><a href="{% url 'cart:product-list' %}">Магазин</a></li>
+            {% endif %}
             <li><a href="{% url 'contact' %}">Контакт</a></li>
             {% if request.user.is_staff %}
                 <li><a href="{% url 'staff:staff' %}">Персонал</a></li>
             {% endif %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle"
-                   href="{% url 'cart:product-list' %}" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup=" true" aria-expanded="false">
-                Магазин
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% for category in categories %}
-                        <li><a class="dropdown-item" href="/cart/shop/?category={{ category.name }}">{{ category.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </li>
+
         </ul>
     </div>
 </nav>

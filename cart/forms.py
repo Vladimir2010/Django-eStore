@@ -34,6 +34,8 @@ class AddressForm(forms.Form):
     shipping_city = forms.CharField(required=False)
 
     selected_shipping_address = forms.ModelChoiceField(Address.objects.none(), required=False)
+    
+    selected_firm_for_order = forms.ModelChoiceField(User.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop('user_id')

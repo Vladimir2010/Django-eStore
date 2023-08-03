@@ -174,7 +174,7 @@ class CheckoutView(LoginRequiredMixin, generic.FormView):
 
 
 class PaymentView(LoginRequiredMixin, generic.TemplateView):
-    template_name = 'cart/payment.html'
+    template_name = 'cart/payment-options.html'
 
     def get_context_data(self, **kwargs):
         context = super(PaymentView, self).get_context_data(**kwargs)
@@ -187,14 +187,6 @@ class ConfirmOrderView(generic.View):
     @staticmethod
     def post(request, *args, **kwargs):
         order = get_or_set_order_session(request)
-        # body = json.loads(request.body)
-        # payment = Payment.objects.create(
-        #     order=order,
-        #     successful=True,
-        #     raw_response=json.dumps(body),
-        #     amount=float(body["purchase_units"][0]["amount"]["value"]),
-        #     payment_method='Наложен платеж',
-        # )
         order.ordered = True
         order.ordered_date = datetime.date.today()
         order.save()
@@ -203,7 +195,8 @@ class ConfirmOrderView(generic.View):
 
 class ThankYouView(generic.TemplateView):
     template_name = 'cart/thanks.html'
-    template_for_email = 'cart/email_success_order.html'
+    template_for_email_to_admins = 'cart/email_success_order.html'
+    template_for_email_to_user = 'cart/email_success_order_client.html'
 
     def get(self, request, *args, **kwargs):
         order = get_or_set_order_session(self.request)
@@ -214,25 +207,29 @@ class ThankYouView(generic.TemplateView):
         date_time = datetime.datetime.now()
         order.ordered_date = date_time
         order.ordered = True
-        order.payment_method = 'Банков път'
+        order.payment_method = order.get_payment_method
         order.save()
         for order_item in order_items:
             order_item.product.stock -= order_item.quantity
         data = []
         context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order}
-        html_content = render_to_string(self.template_for_email, context, request=self.request)
-        emails = [email for email in settings.ADMINS]
-        emails.append(settings.NOTIFY_EMAIL)
-        emails.append(settings.EMAIL_HOST_USER)
+        html_content_for_admins = render_to_string(self.template_for_email_to_admins, context, request=self.request)
+        html_content_for_users = render_to_string(self.template_for_email_to_user, context, request=self.request)
+        emails_admins = [email for email in settings.ADMINS]
+        emails_admins.append(settings.NOTIFY_EMAIL)
+        emails_admins.append(settings.EMAIL_HOST_USER)
+        email_user = [user.email]
         subject = f"Поръчка: {order.order_number}"
         from_email = settings.EMAIL_HOST_USER
-        recipient_list = emails
-        # emails.append(user.email)
+        recipient_list_for_admins = emails_admins
+        recipient_list_for_users = email_user
         for i in order_items:
             data.append({'product_name': i.product.title, 'quantity': i.quantity, 'price': i.product.get_price(),
                          'total': i.get_total_item_price()})
-        send_mail(subject, "Вашата поръчка е успешно поръчана", from_email, recipient_list,
-                  fail_silently=False, html_message=html_content)
+        send_mail(subject, "Нова поръчка", from_email, recipient_list_for_admins,
+                  fail_silently=False, html_message=html_content_for_admins)
+        send_mail(subject, "Вашата поръчка е успешно поръчана", from_email, recipient_list_for_users,
+                  fail_silently=False, html_message=html_content_for_users)
         return render(self.request, 'cart/thanks.html')
 
 
@@ -249,11 +246,25 @@ class BankPayment(LoginRequiredMixin, generic.TemplateView):
         bank = BankAccount.objects.first()
         order = get_or_set_order_session(self.request)
         order.payment_method = "Банков път"
+        order.save()
         context = {
             'bank': bank,
             'order': order
         }
         return render(self.request, 'cart/bank-payment.html', context)
+
+
+class DeliveryPayment(LoginRequiredMixin, generic.TemplateView):
+    template_name = "cart/delivery-payment.html"
+
+    def get(self, request, *args, **kwargs):
+        order = get_or_set_order_session(self.request)
+        order.payment_method = "Наложен Платеж"
+        order.save()
+        context = {
+            'order': order,
+        }
+        return render(self.request, 'cart/delivery-payment.html', context)
 
 
 #
@@ -298,6 +309,7 @@ def search_view(request):
     categories = Category.objects.values("name")
     context = {
         'object_list': object_list,
-        'categories': categories
+        'categories': categories,
+        'product_list': product_list
     }
     return render(request, 'cart/product_list.html', context)

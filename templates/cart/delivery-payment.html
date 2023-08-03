@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bg">
+{% extends 'base.html' %}
+{% block extra_head %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Наложен Платеж</title>
+    </head>
+{% endblock %}
+
+<body>
+{% block content %}
+    <div class="site-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <h2 class="h3 mb-3 text-black">Наложен Платеж</h2>
+                </div>
+                <div class="col-md-7">
+                    <table class="table site-block-order-table mb-5">
+                        <thead>
+                        <tr>
+                            <th>Продукт</th>
+                            <th>Количество</th>
+                            <th>Общо</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in order.items.all %}
+                            <tr>
+                                <td>{{ item.product.title }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.get_total_item_price }}лв.</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td><strong class="text-black font-weight-bold">Обща сума на поръчката</strong></td>
+                            <td>
+                                <strong class="text-black font-weight-bold">
+                                    {{ order.get_total }}лв.
+                                </strong>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a href="{% url 'cart:thank-you' %}"><input type="submit" class="btn btn-primary btn-lg btn-block"
+                                                                value="Приключи Поръчката"/></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+</body>
+</html>

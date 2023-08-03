@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.shortcuts import reverse, render, redirect, get_object_or_404
 from django.views import generic
 from cart.models import Order, OrderItem, Product
-from .forms import ContactForm, EditUserForm, FirmForm, EditFirmForm
+from .forms import ContactForm, EditUserForm, FirmForm, EditFirmForm, RemoveFirmForm
 from django.core import mail
 from django.core.mail import EmailMessage
 from .models import CustomUserModel, Firm
@@ -114,10 +114,18 @@ def view_firms(request):
 
 def remove_firm(request, firm_id):
     firm = get_object_or_404(Firm, id=firm_id)
+    form = RemoveFirmForm(instance=firm)
     context = {
-        'firm': firm
+        'firm': firm,
+        'form': form
     }
-    firm.delete()
+
+    if request.method == 'POST':
+        form = RemoveFirmForm(request.POST, instance=firm)
+        if form.is_valid():
+            firm.delete()
+            return redirect('view-firms')
+
     return render(request, 'firm/remove-firm.html', context)
 
 

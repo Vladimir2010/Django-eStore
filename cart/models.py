@@ -111,6 +111,11 @@ class Order(models.Model):
     def __str__(self):
         return self.reference_number
 
+    def is_delivery_payment(self):
+        if self.payment_method == 'Наложен платеж':
+            return True
+        return False
+
     @property
     def get_payment_method(self):
         return self.payment_method
@@ -131,7 +136,7 @@ class Order(models.Model):
 
     def get_subtotal(self):
         subtotal = self.get_raw_subtotal()
-        return "{:.2f}".format(subtotal / 100)
+        return "{:.2f}".format(subtotal)
 
     def get_raw_total(self):
         subtotal = self.get_raw_subtotal()

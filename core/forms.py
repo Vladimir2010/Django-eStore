@@ -159,3 +159,17 @@ class EditFirmForm(forms.ModelForm):
                 }
             )
         }
+
+
+class RemoveFirmForm(forms.ModelForm):
+    class Meta:
+        model = Firm
+        fields = '__all__'
+        exclude = ['user', 'is_deleted']
+        widgets = {
+            'name_of_firm': forms.HiddenInput(),
+            'bulstat': forms.HiddenInput(),
+            'VAT_number': forms.HiddenInput(),
+            'address_by_registration': forms.HiddenInput(),
+            'owner_of_firm': forms.HiddenInput()
+        }

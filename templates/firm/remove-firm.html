@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 <style>
     #info-message {
         display: none;
@@ -23,38 +24,15 @@
                         фирмата {{ firm.name_of_firm }}?</p>
                 </div>
                 <div class="col-md-7">
-                    <a href="{% url 'view-firms' %}">
-                        <button class="btn btn-primary btn-sm" type="submit">Премахване</button>
-                    </a>
+                    <form action="{% url 'remove-firm' firm.id %}" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <input class="btn btn-primary" type="submit" value="Премахване">
+                    </form>
                 </div>
             </div>
-{#            <div class="col-md-7" id="info-message">#}
-{#                <p>Изтрихте фирмата {{ firm.name_of_firm }}</p>#}
-{#                <button onclick="hideInfoMessage()">Затвори</button>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#    <script>#}
-{#        function showInfoMessage() {#}
-{#            var infoMessage = document.getElementById('info-message');#}
-{#            infoMessage.style.display = 'block';#}
-{#        }#}
-{##}
-{#        function hideInfoMessage() {#}
-{#            var infoMessage = document.getElementById('info-message');#}
-{#            infoMessage.style.display = 'none';#}
-{#        }#}
-{##}
-{#        document.addEventListener('DOMContentLoaded', function () {#}
-{#            showInfoMessage();#}
-{#        });#}
-{#    </script>#}
-{#    <div class="woocommerce-notices-wrapper">#}
-{#        <div class="woocommerce-message" role="alert">#}
-{#            „{{ firm.name_of_firm }}“ е премахнат. <a#}
-{#                href="https://ekafp.eu/%d0%ba%d0%be%d0%bb%d0%b8%d1%87%d0%ba%d0%b0/?undo_item=eba0dc302bcd9a273f8bbb72be3a687b&amp;_wpnonce=a29f80165c"#}
-{#                class="restore-item">Отмяна?</a></div>#}
-{#    </div>#}
+        </div>
+    </div>
 {% endblock %}
 
 
