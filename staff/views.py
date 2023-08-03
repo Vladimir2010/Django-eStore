@@ -53,7 +53,6 @@ class ProductDeleteView(LoginRequiredMixin, StaffUserMixin, generic.DeleteView):
         return reverse("staff:product-list")
 
 
-
 class CategoryCreateView(LoginRequiredMixin, StaffUserMixin, generic.CreateView):
     template_name = 'staff/create_category.html'
     form_class = CreateCategoryForm

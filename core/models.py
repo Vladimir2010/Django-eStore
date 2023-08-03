@@ -13,6 +13,7 @@ class CustomUserModel(AbstractUser):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+
 class OwnerFirm(models.Model):
     user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
     name_of_firm = models.CharField(max_length=100)
@@ -43,7 +44,6 @@ class OwnerFirm(models.Model):
             return True
         return False
 
-
     def __str__(self):
         return self.name_of_firm
 
@@ -65,6 +65,7 @@ class Firm(models.Model):
 
     def __str__(self):
         return self.name_of_firm
+
 
 class Customer(models.Model):
     user = models.OneToOneField(CustomUserModel, on_delete=models.CASCADE)
