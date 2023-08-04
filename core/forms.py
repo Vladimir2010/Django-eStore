@@ -173,3 +173,5 @@ class RemoveFirmForm(forms.ModelForm):
             'address_by_registration': forms.HiddenInput(),
             'owner_of_firm': forms.HiddenInput()
         }
+
+

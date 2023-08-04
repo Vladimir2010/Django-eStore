@@ -1,27 +1,21 @@
-from django.http import HttpResponse, JsonResponse, FileResponse
+import datetime
+from datetime import date
+
 from django.conf import settings
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, reverse, redirect, render
-from django.utils import timezone
+from django.template.loader import render_to_string
 from django.views import generic
-from django.views.decorators.csrf import csrf_exempt
-from .forms import AddToCartForm, AddressForm
-from django.core import mail
-from django.core.mail import EmailMessage
-from .models import Product, OrderItem, Address, Payment, Order, Category, BankAccount
+
 from core.models import OwnerFirm
+from .forms import AddToCartForm, AddressForm, AddFirmToOrder
+from .models import Product, OrderItem, Address, Order, Category, BankAccount
+from core.models import Firm
 from .utils import get_or_set_order_session
-from reportlab.lib import (pagesizes, units)
-from reportlab.pdfgen import canvas
-from reportlab.platypus.paragraph import Paragraph
-from datetime import date, timezone
-import io
-import datetime
-import json
 
 
 class ProductListView(generic.ListView):
@@ -141,6 +135,8 @@ class CheckoutView(LoginRequiredMixin, generic.FormView):
 
     def form_valid(self, form):
         order = get_or_set_order_session(self.request)
+        selected_firm_for_order = form.cleaned_data.get(
+            'selected_firm_for_order')
         selected_shipping_address = form.cleaned_data.get(
             'selected_shipping_address')
 
@@ -157,9 +153,24 @@ class CheckoutView(LoginRequiredMixin, generic.FormView):
             )
             order.shipping_address = address
 
+        if selected_firm_for_order:
+            order.firm = selected_firm_for_order
+        else:
+            firm = Firm.objects.create(
+                user = self.request.user,
+                name_of_firm = form.cleaned_data['name_of_firm'],
+                bulstat = form.cleaned_data['bulstat'],
+                VAT_number = form.cleaned_data['VAT_number'],
+                address_by_registration = form.cleaned_data['address_by_registration'],
+                owner_of_firm = form.cleaned_data['owner_of_firm'],
+            )
+            order.firm = firm
+
         order.save()
         messages.info(
-            self.request, "Успешно добавихте адреса си!")
+        self.request, "Успешно добавихте адреса си!")
+        messages.info(
+            self.request, "Успешно добавихте фирмата си!")
         return super(CheckoutView, self).form_valid(form)
 
     def get_form_kwargs(self):

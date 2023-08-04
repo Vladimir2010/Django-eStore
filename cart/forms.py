@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django import forms
 from .models import (OrderItem, Product, Address)
+from core.models import Firm
 
 User = get_user_model()
 
@@ -27,15 +28,79 @@ class AddToCartForm(forms.ModelForm):
                 f"Максималното налично количество е: {product.stock}")
 
 
+class AddFirmToOrder(forms.Form):
+    name_of_firm = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Име на Фирма"
+    }))
+    bulstat = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "ЕИК"
+    }))
+    VAT_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Номер по ЗДДС (по избор)"
+    }))
+    address_by_registration = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Адрес на фирма по регистрация"
+    }))
+    owner_of_firm = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "МОЛ"
+    }))
+    selected_firm_for_order = forms.ModelChoiceField(Firm.objects.none(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('user_id')
+        super().__init__(*args, **kwargs)
+
+        user = User.objects.get(id=user_id)
+
+        firm_form_qs = Firm.objects.filter(
+            user=user,
+            is_deleted=False
+        )
+        #
+        # if firm_form_qs.exists():
+        #     shipping_address_qs.address_line_2 = ''
+
+        self.fields['selected_firm_for_order'].queryset = firm_form_qs
+        self.fields['name_of_firm'].label = "Име на Фирма"
+        self.fields['bulstat'].label = "ЕИК"
+        self.fields['VAT_number'].label = "Номер по ЗДДС (по избор)"
+        self.fields['address_by_registration'] = "Адрес на фирма по регистрация"
+        self.fields['owner_of_firm'].label = "МОЛ"
+        self.fields['selected_firm_for_order'].label = "Избери Фирма за фактура"
+        self.fields['VAT_number'].required = False
+
+    def clean(self):
+        data = self.cleaned_data
+
+        selected_firm_for_order = data.get('selected_firm_for_order', None)
+        if selected_firm_for_order is None:
+            if not data.get('name_of_firm', None):
+                self.add_error("name_of_firm", "Моля попълнете полето")
+            if not data.get('bulstat', None):
+                self.add_error('bulstat', "Моля попълнете полето")
+            if not data.get('VAT_number', ''):
+                data['VAT_number'] = ''
+            if not data.get('address_by_registration', None):
+                self.add_error("address_by_registration", "Моля попълнете полето")
+            if not data.get('owner_of_firm', None):
+                self.add_error("owner_of_firm", "Моля попълнете полето")
+
+
 class AddressForm(forms.Form):
-    shipping_address_line_1 = forms.CharField(required=False)
-    shipping_address_line_2 = forms.CharField(required=False)
-    shipping_zip_code = forms.CharField(required=False)
-    shipping_city = forms.CharField(required=False)
+    shipping_address_line_1 = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Адрес за доставка"
+    }))
+    shipping_address_line_2 = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Адрес за доставка 2"
+    }))
+    shipping_zip_code = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Пощенски код"
+    }))
+    shipping_city = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Град"
+    }))
 
     selected_shipping_address = forms.ModelChoiceField(Address.objects.none(), required=False)
-    
-    selected_firm_for_order = forms.ModelChoiceField(User.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop('user_id')
@@ -47,6 +112,7 @@ class AddressForm(forms.Form):
             user=user,
             address_type='S'
         )
+
         if shipping_address_qs.exists():
             shipping_address_qs.address_line_2 = ''
 
@@ -58,6 +124,7 @@ class AddressForm(forms.Form):
         self.fields['shipping_city'].label = "Град"
         self.fields['selected_shipping_address'].label = "Избери адрес за доставка"
         self.fields['shipping_address_line_2'].required = False
+
 
     def clean(self):
         data = self.cleaned_data

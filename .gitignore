@@ -9,3 +9,4 @@ cart/migrations/
 media/
 env/
 ecom/.env
+postgresql/

@@ -4,7 +4,7 @@ from django.db.models.signals import pre_save
 from django.shortcuts import reverse
 from django.utils.text import slugify
 from .validators import check_bank_account
-from core.models import CustomUserModel
+from core.models import CustomUserModel, Firm
 
 User = CustomUserModel
 
@@ -107,6 +107,8 @@ class Order(models.Model):
 
     shipping_address = models.ForeignKey(
         Address, related_name='shipping_address', blank=True, null=True, on_delete=models.SET_NULL)
+    firm = models.ForeignKey(
+        Firm, related_name='firm', blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.reference_number
