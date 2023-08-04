@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 from django.views import generic
 
 from core.models import OwnerFirm
-from .forms import AddToCartForm, AddressForm, AddFirmToOrder
+from .forms import AddToCartForm, AddressForm
 from .models import Product, OrderItem, Address, Order, Category, BankAccount
 from core.models import Firm
 from .utils import get_or_set_order_session
@@ -135,8 +135,8 @@ class CheckoutView(LoginRequiredMixin, generic.FormView):
 
     def form_valid(self, form):
         order = get_or_set_order_session(self.request)
-        selected_firm_for_order = form.cleaned_data.get(
-            'selected_firm_for_order')
+        # selected_firm_for_order = form.cleaned_data.get(
+        #     'selected_firm_for_order')
         selected_shipping_address = form.cleaned_data.get(
             'selected_shipping_address')
 
@@ -153,18 +153,18 @@ class CheckoutView(LoginRequiredMixin, generic.FormView):
             )
             order.shipping_address = address
 
-        if selected_firm_for_order:
-            order.firm = selected_firm_for_order
-        else:
-            firm = Firm.objects.create(
-                user = self.request.user,
-                name_of_firm = form.cleaned_data['name_of_firm'],
-                bulstat = form.cleaned_data['bulstat'],
-                VAT_number = form.cleaned_data['VAT_number'],
-                address_by_registration = form.cleaned_data['address_by_registration'],
-                owner_of_firm = form.cleaned_data['owner_of_firm'],
-            )
-            order.firm = firm
+        # if selected_firm_for_order:
+        #     order.firm = selected_firm_for_order
+        # else:
+        #     firm = Firm.objects.create(
+        #         user = self.request.user,
+        #         name_of_firm = form.cleaned_data['name_of_firm'],
+        #         bulstat = form.cleaned_data['bulstat'],
+        #         VAT_number = form.cleaned_data['VAT_number'],
+        #         address_by_registration = form.cleaned_data['address_by_registration'],
+        #         owner_of_firm = form.cleaned_data['owner_of_firm'],
+        #     )
+        #     order.firm = firm
 
         order.save()
         messages.info(

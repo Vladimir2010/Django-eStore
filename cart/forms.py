@@ -47,8 +47,12 @@ class AddFirmToOrder(forms.Form):
     selected_firm_for_order = forms.ModelChoiceField(Firm.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
-        user_id = kwargs.pop('user_id')
-        super().__init__(*args, **kwargs)
+        user_id = kwargs.get('user_id')
+        if kwargs.get('user_id'):
+            user_id = kwargs.pop('user_id')
+            super().__init__(*args, **kwargs)
+        else:
+            super().__init__(*args, **kwargs)
 
         user = User.objects.get(id=user_id)
 
@@ -56,9 +60,9 @@ class AddFirmToOrder(forms.Form):
             user=user,
             is_deleted=False
         )
-        #
-        # if firm_form_qs.exists():
-        #     shipping_address_qs.address_line_2 = ''
+
+        if firm_form_qs.exists():
+            shipping_address_qs.address_line_2 = ''
 
         self.fields['selected_firm_for_order'].queryset = firm_form_qs
         self.fields['name_of_firm'].label = "Име на Фирма"
@@ -87,6 +91,7 @@ class AddFirmToOrder(forms.Form):
 
 
 class AddressForm(forms.Form):
+    # Fields
     shipping_address_line_1 = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'placeholder': "Адрес за доставка"
     }))
@@ -100,22 +105,26 @@ class AddressForm(forms.Form):
         'placeholder': "Град"
     }))
 
+    # Choise fields
+
     selected_shipping_address = forms.ModelChoiceField(Address.objects.none(), required=False)
 
+    # Initial and forms query-sets
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop('user_id')
         super().__init__(*args, **kwargs)
 
         user = User.objects.get(id=user_id)
 
+
         shipping_address_qs = Address.objects.filter(
             user=user,
             address_type='S'
         )
-
-        if shipping_address_qs.exists():
-            shipping_address_qs.address_line_2 = ''
-
+        #
+        # if shipping_address_qs.exists():
+        #     shipping_address_qs.address_line_2 = ''
+        # Labels of fields
         self.fields['selected_shipping_address'].queryset = shipping_address_qs
         # labels
         self.fields['shipping_address_line_1'].label = "Адрес за доставка"
@@ -127,8 +136,11 @@ class AddressForm(forms.Form):
 
 
     def clean(self):
+        # Get data
         data = self.cleaned_data
 
+
+        # Clean data from shipping address
         selected_shipping_address = data.get('selected_shipping_address', None)
         if selected_shipping_address is None:
             if not data.get('shipping_address_line_1', None):
@@ -139,4 +151,3 @@ class AddressForm(forms.Form):
                 self.add_error("shipping_zip_code", "Моля попълнете полето")
             if not data.get('shipping_city', None):
                 self.add_error("shipping_city", "Моля попълнете полето")
-
