@@ -29,6 +29,9 @@
                     <th>Номер по ЗДДС</th>
                     <th>Адрес по регистрация</th>
                     <th>МОЛ</th>
+                    <th>Мобилен телефон</th>
+                    <th>Стационарен телефон</th>
+                    <th>Имейл</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -41,6 +44,9 @@
                             <td></td>{% endif %}
                         <td>{{ firm.address_by_registration }}</td>
                         <td>{{ firm.owner_of_firm }}</td>
+                        <td>{{ firm.mobile_number }}</td>
+                        <td>{{ firm.static_number }}</td>
+                        <td>{{ firm.email }}</td>
                         <td>
                             <a href="{% url 'remove-firm' firm.id %}" class="btn btn-primary btn-sm">X</a>
                             <br>

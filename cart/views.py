@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 from django.views import generic
 
 from core.models import OwnerFirm
-from .forms import AddToCartForm, AddressForm
+from .forms import AddToCartForm, AddressForm, AddFirmToOrder
 from .models import Product, OrderItem, Address, Order, Category, BankAccount
 from core.models import Firm
 from .utils import get_or_set_order_session
@@ -126,62 +126,137 @@ class RemoveFromCartView(generic.View):
         return redirect("cart:summary")
 
 
-class CheckoutView(LoginRequiredMixin, generic.FormView):
-    template_name = 'cart/checkout.html'
-    form_class = AddressForm
+def checkout(request):
+    user = request.user
+    user_id = request.user.id
+    order = get_or_set_order_session(request)
+    shipping_form = AddressForm(user_id=user_id)
+    firm_form = AddFirmToOrder(user_id=user_id)
 
-    def get_success_url(self):
-        return reverse("cart:payment")
+    if request.method == "POST":
+        add_firm = request.POST.get('add-firm')
+        is_firm_added = add_firm == 'on'
+        if is_firm_added:
+            shipping_form = AddressForm(request.POST, user_id=user_id)
+            firm_form = AddFirmToOrder(request.POST, user_id=user_id)
 
-    def form_valid(self, form):
-        order = get_or_set_order_session(self.request)
-        # selected_firm_for_order = form.cleaned_data.get(
-        #     'selected_firm_for_order')
-        selected_shipping_address = form.cleaned_data.get(
-            'selected_shipping_address')
+            if shipping_form.is_valid() and firm_form.is_valid():
+                selected_firm = firm_form.cleaned_data.get('selected_firm_for_order')
+                selected_shipping_address = shipping_form.cleaned_data.get('selected_shipping_address')
 
-        if selected_shipping_address:
-            order.shipping_address = selected_shipping_address
+                if selected_firm:
+                    order.firm = selected_firm
+                else:
+                    order.firm = Firm.objects.create(
+                        user=user,
+                        name_of_firm=firm_form.cleaned_data['name_of_firm'],
+                        bulstat=firm_form.cleaned_data['bulstat'],
+                        VAT_number=firm_form.cleaned_data['VAT_number'],
+                        address_by_registration=firm_form.cleaned_data['address_by_registration'],
+                        owner_of_firm=firm_form.cleaned_data['owner_of_firm'],
+                        mobile_number=firm_form.cleaned_data['mobile_number'],
+                        static_number=firm_form.cleaned_data['static_number'],
+                        email=firm_form.cleaned_data['email'],
+                    )
+
+                if selected_shipping_address:
+                    order.shipping_address = selected_shipping_address
+                else:
+                    order.shipping_address = Address.objects.create(
+                        address_type='S',
+                        user=user,
+                        address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
+                        address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
+                        zip_code=shipping_form.cleaned_data['shipping_zip_code'],
+                        city=shipping_form.cleaned_data['shipping_city'],
+                    )
+                order.save()
+                return redirect("cart:payment")
+
         else:
-            address = Address.objects.create(
-                address_type='S',
-                user=self.request.user,
-                address_line_1=form.cleaned_data['shipping_address_line_1'],
-                address_line_2=form.cleaned_data['shipping_address_line_2'],
-                zip_code=form.cleaned_data['shipping_zip_code'],
-                city=form.cleaned_data['shipping_city'],
-            )
-            order.shipping_address = address
+            shipping_form = AddressForm(request.POST, user_id=user_id)
+            if shipping_form.is_valid():
+                    selected_shipping_address = shipping_form.cleaned_data.get('selected_shipping_address')
+                    if selected_shipping_address:
+                        order.shipping_address = selected_shipping_address
+                    else:
+                        order.shipping_address = Address.objects.create(
+                            address_type='S',
+                            user=user,
+                            address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
+                            address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
+                            zip_code=shipping_form.cleaned_data['shipping_zip_code'],
+                            city=shipping_form.cleaned_data['shipping_city'],
+                        )
+                    order.save()
+                    return redirect("cart:payment")
 
-        # if selected_firm_for_order:
-        #     order.firm = selected_firm_for_order
-        # else:
-        #     firm = Firm.objects.create(
-        #         user = self.request.user,
-        #         name_of_firm = form.cleaned_data['name_of_firm'],
-        #         bulstat = form.cleaned_data['bulstat'],
-        #         VAT_number = form.cleaned_data['VAT_number'],
-        #         address_by_registration = form.cleaned_data['address_by_registration'],
-        #         owner_of_firm = form.cleaned_data['owner_of_firm'],
-        #     )
-        #     order.firm = firm
 
-        order.save()
-        messages.info(
-        self.request, "Успешно добавихте адреса си!")
-        messages.info(
-            self.request, "Успешно добавихте фирмата си!")
-        return super(CheckoutView, self).form_valid(form)
+    context = {
+        "order": order,
+        "firm_form": firm_form,
+        "shipping_form": shipping_form,
+        "user_id": user_id
+    }
+    return render(request, "cart/checkout.html", context)
 
-    def get_form_kwargs(self):
-        kwargs = super(CheckoutView, self).get_form_kwargs()
-        kwargs["user_id"] = self.request.user.id
-        return kwargs
 
-    def get_context_data(self, **kwargs):
-        context = super(CheckoutView, self).get_context_data(**kwargs)
-        context["order"] = get_or_set_order_session(self.request)
-        return context
+# class CheckoutView(LoginRequiredMixin, generic.FormView):
+#     template_name = 'cart/checkout.html'
+#     form_class = AddressForm
+#
+#     def get_success_url(self):
+#         return reverse("cart:payment")
+#
+#     def form_valid(self, form):
+#         order = get_or_set_order_session(self.request)
+#         # selected_firm_for_order = form.cleaned_data.get(
+#         #     'selected_firm_for_order')
+#         selected_shipping_address = form.cleaned_data.get(
+#             'selected_shipping_address')
+#
+#         if selected_shipping_address:
+#             order.shipping_address = selected_shipping_address
+#         else:
+#             address = Address.objects.create(
+#                 address_type='S',
+#                 user=self.request.user,
+#                 address_line_1=form.cleaned_data['shipping_address_line_1'],
+#                 address_line_2=form.cleaned_data['shipping_address_line_2'],
+#                 zip_code=form.cleaned_data['shipping_zip_code'],
+#                 city=form.cleaned_data['shipping_city'],
+#             )
+#             order.shipping_address = address
+#
+#         # if selected_firm_for_order:
+#         #     order.firm = selected_firm_for_order
+#         # else:
+#         #     firm = Firm.objects.create(
+#         #         user = self.request.user,
+#         #         name_of_firm = form.cleaned_data['name_of_firm'],
+#         #         bulstat = form.cleaned_data['bulstat'],
+#         #         VAT_number = form.cleaned_data['VAT_number'],
+#         #         address_by_registration = form.cleaned_data['address_by_registration'],
+#         #         owner_of_firm = form.cleaned_data['owner_of_firm'],
+#         #     )
+#         #     order.firm = firm
+#
+#         order.save()
+#         messages.info(
+#             self.request, "Успешно добавихте адреса си!")
+#         messages.info(
+#             self.request, "Успешно добавихте фирмата си!")
+#         return super(CheckoutView, self).form_valid(form)
+#
+#     def get_form_kwargs(self):
+#         kwargs = super(CheckoutView, self).get_form_kwargs()
+#         kwargs["user_id"] = self.request.user.id
+#         return kwargs
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(CheckoutView, self).get_context_data(**kwargs)
+#         context["order"] = get_or_set_order_session(self.request)
+#         return context
 
 
 class PaymentView(LoginRequiredMixin, generic.TemplateView):
@@ -324,3 +399,8 @@ def search_view(request):
         'product_list': product_list
     }
     return render(request, 'cart/product_list.html', context)
+
+
+def test(request):
+
+    return render(request, 'cart/test.html')

@@ -1,0 +1,396 @@
+<!DOCTYPE  html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% load static %}
+{% load cart_template_tags %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="bg" lang="bg">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Проформа фактура No</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            text-indent: 0;
+        }
+
+        h1 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 19.5pt;
+        }
+
+        h2 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 13.5pt;
+        }
+
+        .s1 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 10pt;
+        }
+
+        .s2 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 8pt;
+        }
+
+        .s3 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 8pt;
+        }
+
+        .s4 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 9pt;
+        }
+
+        .s5 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 9pt;
+        }
+
+        h4 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 6.5pt;
+        }
+
+        .p, p {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 6.5pt;
+            margin: 0pt;
+        }
+
+        .s6 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 6.5pt;
+            vertical-align: 2pt;
+        }
+
+        .h3 {
+            color: #F00;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 9pt;
+        }
+
+        .s7 {
+            color: #F00;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 6.5pt;
+        }
+
+        a {
+            color: #00F;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: underline;
+            font-size: 6.5pt;
+        }
+
+        .s8 {
+            color: #808080;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 6.5pt;
+        }
+
+        .s9 {
+            color: #808080;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 6pt;
+        }
+
+        li {
+            display: block;
+        }
+
+        #l1 {
+            padding-left: 0pt;
+        }
+
+        #l1 > li > *:first-child:before {
+            content: "- ";
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 9pt;
+        }
+
+        table, tbody {
+            vertical-align: top;
+            overflow: visible;
+        }
+    </style>
+</head>
+<body>
+<p style="padding-left: 9pt;text-indent: 0pt;text-align: left;"><span><a href="#"><table
+        border="0" cellspacing="0" cellpadding="0"><tr><td><img width="712" height="69"
+                                                                src="{% static 'images/logo.jpg' %}"/></td></tr></table></a></span>
+</p>
+<h1 style="padding-top: 6pt;padding-left: 160pt;text-indent: 0pt;text-align: center;">Проформа фактура</h1>
+<h2 style="padding-top: 9pt;padding-left: 160pt;text-indent: 0pt;text-align: center;">№ {{ facture.number_of_facture }}
+    / от {{ facture.facture_date }}</h2>
+<p style="text-indent: 0pt;text-align: left;"><br/></p>
+<table style="border-collapse:collapse;margin-left:5.8865pt" cellspacing="0">
+    <tr style="height:16pt">
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p style="text-indent: 0pt;text-align: left;"><br/></p></td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p style="text-indent: 0pt;text-align: left;"><br/></p></td>
+        <td style="width:272pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
+            colspan="2"><p class="s1" style="padding-top: 1pt;padding-left: 66pt;text-indent: 0pt;text-align: left;">
+            {{ facture.owner_firm.name_of_firm }}</p></td>
+    </tr>
+    <tr style="height:13pt">
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Получател:</p>
+        </td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3"
+               style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ facture.firm.name_of_firm }}</p>
+        </td>
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Адрес:</p></td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3"
+               style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ facture.owner_firm.address_by_registration }}</p>
+        </td>
+    </tr>
+    <tr style="height:23pt">
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 6pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Адрес:</p></td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3"
+               style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ facture.firm.address_by_registration }}</p>
+        </td>
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Място на
+                сделката:</p></td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3"
+               style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ facture.owner_firm.address_by_registration }}</p>
+        </td>
+    </tr>
+    <tr style="height:13pt">
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">ИН:</p></td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3"
+               style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ facture.firm.bulstat }}</p>
+        </td>
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">ИН:</p></td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3"
+               style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ facture.owner_firm.bulstat }}</p>
+        </td>
+    </tr>
+    <tr style="height:13pt">
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">ИН по ЗДДС:</p>
+        </td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p style="text-indent: 0pt;text-align: left;">
+                {% if facture.firm.is_vat %}{{ facture.firm.VAT_number }}{% else %}{% endif %}<br/></p></td>
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">ИН по ЗДДС:</p>
+        </td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">
+                {% if facture.owner_firm.is_vat %}{{ facture.firm.VAT_number }}{% else %}{% endif %}</p>
+        </td>
+    </tr>
+    <tr style="height:13pt">
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">МОЛ:</p></td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3"
+               style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ facture.firm.owner_of_firm }}</p>
+        </td>
+        <td style="width:64pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">МОЛ:</p></td>
+        <td style="width:208pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s3"
+               style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ facture.owner_firm.owner_of_firm }}</p>
+        </td>
+    </tr>
+</table>
+<p style="text-indent: 0pt;text-align: left;"><br/></p>
+<table style="border-collapse:collapse;margin-left:5.762pt" cellspacing="0">
+    <tr style="height:27pt">
+        <td style="width:16pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s1" style="padding-top: 6pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">No.</p></td>
+        <td style="width:298pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s1" style="padding-top: 6pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Описание на
+                стоката / услугата</p></td>
+        <td style="width:30pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s1" style="padding-top: 6pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">K-во</p></td>
+        <td style="width:70pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s1" style="padding-right: 1pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Ед.цена </p>
+            <p class="s1" style="padding-right: 1pt;text-indent: 0pt;line-height: 12pt;text-align: right;">лв.</p></td>
+        {#        <td style="width:70pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">#}
+        {#            <p class="s1" style="padding-right: 1pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Отстъпка,</p>#}
+        {#            <p class="s1" style="padding-right: 1pt;text-indent: 0pt;line-height: 12pt;text-align: right;">лв.</p></td>#}
+        <td style="width:59pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s1" style="padding-right: 1pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Стойност </p>
+            <p class="s1" style="padding-right: 1pt;text-indent: 0pt;line-height: 12pt;text-align: right;">лв.</p></td>
+    </tr>
+    {% for i in order_items_set.count %}
+        {% for item in order_items %}
+            <tr style="height:46pt">
+                <td style="width:16pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;"><br/></p>
+                    <p class="s4" style="padding-right: 1pt;text-indent: 0pt;text-align: right;">{{ i|increment }}.</p>
+                </td>
+                <td style="width:298pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s4"
+                       style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{ item.product.title }}</p>
+                </td>
+                <td style="width:30pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;"><br/></p>
+                    <p class="s4" style="padding-right: 1pt;text-indent: 0pt;text-align: right;">{{ item.quantity }}</p>
+                </td>
+                <td style="width:70pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;"><br/></p>
+                    <p class="s4"
+                       style="padding-left: 19pt;text-indent: 0pt;text-align: left;">{{ item.product.price|floatformat:2 }}
+                        лв.</p></td>
+                <td style="width:59pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;"><br/></p>
+                    <p class="s4"
+                       style="padding-right: 1pt;text-indent: 0pt;text-align: right;">{{ item.get_total_item_price }}
+                        лв.</p></td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    <tr style="height:14pt">
+        <td style="width:484pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
+            colspan="5"><p class="s4" style="padding-top: 1pt;padding-left: 316pt;text-indent: 0pt;text-align: left;">
+            Данъчна основа: </p></td>
+        {% if facture.owner_firm.is_vat %}
+            <td style="width:59pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s4"
+                   style="padding-right: 1pt;text-indent: 0pt;text-align: right;">{{ item.total_price_withot_dds|floatformat:2 }}
+                    лв.</p></td>
+        {% else %}
+            <td style="width:59pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s4"
+                   style="padding-right: 1pt;text-indent: 0pt;text-align: right;">{{ item.get_total_item_price|floatformat:2 }}
+                    лв.</p></td>
+        {% endif %}
+
+    </tr>
+    <tr style="height:14pt">
+        <td style="width:484pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
+            colspan="5"><p class="s4" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">
+            Начислен 20.00% ДДС:</p></td>
+        {% if facture.owner_firm.is_vat %}
+            <td style="width:59pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s4" style="padding-right: 1pt;text-indent: 0pt;text-align: right;">{{ order.get_total|dds }}
+                    лв.</p></td>
+        {% endif %}
+    </tr>
+    <tr style="height:14pt">
+        <td style="width:484pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
+            colspan="5"><p class="s5" style="padding-right: 1pt;text-indent: 0pt;text-align: right;">Сума за
+            плащане:</p></td>
+        <td style="width:59pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+            <p class="s5"
+               style="padding-right: 1pt;text-indent: 0pt;text-align: right;">{{ order.get_total|floatformat:2 }}
+                лв.</p></td>
+    </tr>
+</table>
+<p style="text-indent: 0pt;text-align: left;"><br/></p>
+{#<h4 style="padding-left: 6pt;text-indent: 0pt;text-align: left;">#}
+{#    Срок за извършване на плащането: <span class="p">31.07.2023</span></h4>#}
+<h4 style="padding-top: 2pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">Начин на плащане: <span
+        class="p">{{ order.payment_method }}</span>
+</h4>
+<p class="s6" style="padding-top: 2pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">Основание за плащане: <span
+        class="h3">Проформа ф-ра No {{ facture.number_of_facture }}</span></p><h4
+        style="padding-top: 3pt;padding-left: 7pt;text-indent: 0pt;text-align: left;">Банкови сметки:</h4>
+<p style="padding-top: 2pt;padding-left: 7pt;text-indent: 0pt;text-align: left;">(за превод в България)</p>
+<p style="padding-top: 4pt;padding-left: 7pt;text-indent: 0pt;line-height: 133%;text-align: left;">
+    Банка: {{ bank.bank_name }}
+    <br>
+    BIC: {{ bank.BIC }}</p>
+<p style="text-indent: 0pt;text-align: left;"/>
+<p style="padding-left: 7pt;text-indent: 0pt;text-align: left;">IBAN: {{ bank.IBAN }}</p>
+<p style="text-indent: 0pt;text-align: left;"><br/></p><h4 style="padding-left: 6pt;text-indent: 0pt;text-align: left;">
+    За контакти:</h4>
+<p style="padding-top: 4pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">За основание на плащането въведете
+    номера на проформа фактурата.</p>
+<p class="s7" style="padding-top: 2pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">Моля да посочите номер на
+    поръчка и коректни данни на наредител в платежния документ.</p>
+<p style="padding-top: 3pt;padding-left: 7pt;text-indent: 0pt;line-height: 133%;text-align: left;">
+    Адрес: {{ facture.owner_firm.address_by_registration }} Телефони: {{ facture.owner_firm.mobile_number }}</p>
+<p style="text-indent: 0pt;text-align: right;">{{ facture.owner_firm.static_number }}</p>
+<p style="padding-top: 2pt;padding-left: 7pt;text-indent: 0pt;text-align: left;"><a
+        href="mailto:{{ facture.owner_firm.user.email }}"
+        style=" color: black; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 6.5pt;"
+        target="_blank">E-mail: </a><a
+        href="mailto:{{ facture.owner_firm.user.email }}" target="_blank">{{ facture.owner_firm.user.email }}</a></p>
+<p style="padding-top: 2pt;padding-left: 7pt;text-indent: 0pt;text-align: left;"><a href="http://192.168.100.61/"
+                                                                                    style=" color: black; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 6.5pt;"
+                                                                                    target="_blank">URL: </a><a
+        href="http://192.168.100.61/" target="_blank">Везните ЕУ</a></p>
+<p style="text-indent: 0pt;text-align: left;"><br/></p><h4
+        style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">С уважение,</h4>
+<p style="padding-top: 2pt;padding-left: 21pt;text-indent: 0pt;text-align: left;">Търговски отдел на Везните ЕУ</p>
+<p style="text-indent: 0pt;text-align: left;"><br/></p>
+<p style="padding-left: 5pt;text-indent: 0pt;line-height: 1pt;text-align: left;"/>
+<p style="padding-left: 5pt;text-indent: 0pt;line-height: 1pt;text-align: left;"/>
+</body>
+</html>

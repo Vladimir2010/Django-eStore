@@ -126,9 +126,29 @@
                                                                         {{ order.shipping_address.city }}<br>
                                                                         {{ order.shipping_address.zip_code }}
                                                                         <br>
-                                                                        <p style="color:#96588a;font-weight:normal;text-decoration:underline;"
-                                                                           target="_blank">{{ user.phone_number }}</p>
-                                                                        <br>{{ user.email }}
+                                                                        <a style="color:#96588a;font-weight:normal;text-decoration:underline;"
+                                                                           target="_blank">{{ order.user.phone_number }}</a>
+                                                                        <br>
+                                                                        <a href="javascript: internSendMess({{ order.user.email }})">{{ order.user.email }}</a>
+                                                                    </address>
+                                                                </td>
+                                                                <br>
+                                                                <td style="text-align:left;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;border:0;padding:0;"
+                                                                    width="50%" valign="top"><h2
+                                                                        style="color:#96588a;display:block;font-family:'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:130.0%;margin:0 0 18px;text-align:left;">
+                                                                    Адрес за фактуриране</h2>
+                                                                    <address
+                                                                            style="padding:12px;color:#636363;border:1px solid #e5e5e5;">
+                                                                        {{ order.firm.name_of_firm }}<br>
+                                                                        {{ order.firm.bulstat }}<br>
+                                                                        {% if order.firm.VAT_number %}
+                                                                            {{ order.firm.VAT_number }}{% else %}{% endif %}<br>
+                                                                        {{ order.firm.address_by_registration }}<br>
+                                                                        {{ order.firm.owner_firm }}
+                                                                        {{ order.firm.mobile_number }}
+                                                                        {{ order.firm.static_number }}
+                                                                        {{ order.firm.email }}
+                                                                        <br>
                                                                     </address>
                                                                 </td>
                                                             </tr>

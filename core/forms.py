@@ -55,6 +55,9 @@ class FirmForm(forms.ModelForm):
             'VAT_number': 'Номер по ЗДДС (по избор)',
             'address_by_registration': 'Адрес на фирма по регистрация',
             'owner_of_firm': 'МОЛ',
+            'mobile_number': 'Мобилен номер',
+            'static_number': 'Стационарен номер',
+            'email': 'Имейл',
         }
         widgets = {
             'name_of_firm': forms.TextInput(
@@ -131,6 +134,9 @@ class EditFirmForm(forms.ModelForm):
             'VAT_number': 'Номер по ЗДДС (по избор)',
             'address_by_registration': 'Адрес на фирма по регистрация',
             'owner_of_firm': 'МОЛ',
+            'mobile_number': 'Мобилен номер',
+            'static_number': 'Стационарен номер',
+            'email': 'Имейл'
         }
         widgets = {
             'name_of_firm': forms.TextInput(
@@ -171,7 +177,10 @@ class RemoveFirmForm(forms.ModelForm):
             'bulstat': forms.HiddenInput(),
             'VAT_number': forms.HiddenInput(),
             'address_by_registration': forms.HiddenInput(),
-            'owner_of_firm': forms.HiddenInput()
+            'owner_of_firm': forms.HiddenInput(),
+            'mobile_number': forms.HiddenInput(),
+            'static_number': forms.HiddenInput(),
+            'email': forms.HiddenInput()
         }
 
 

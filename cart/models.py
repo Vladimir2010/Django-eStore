@@ -93,6 +93,7 @@ class OrderItem(models.Model):
 
 
 class Order(models.Model):
+
     user = models.ForeignKey(
         User, blank=True, null=True, on_delete=models.CASCADE)
     start_date = models.DateTimeField(auto_now_add=True)

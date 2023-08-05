@@ -44,6 +44,15 @@ class AddFirmToOrder(forms.Form):
     owner_of_firm = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'placeholder': "МОЛ"
     }))
+    mobile_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Мобилен номер"
+    }))
+    static_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Стационарен номер"
+    }))
+    email = forms.EmailField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': "Имейл"
+    }))
     selected_firm_for_order = forms.ModelChoiceField(Firm.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
@@ -61,15 +70,15 @@ class AddFirmToOrder(forms.Form):
             is_deleted=False
         )
 
-        if firm_form_qs.exists():
-            shipping_address_qs.address_line_2 = ''
-
         self.fields['selected_firm_for_order'].queryset = firm_form_qs
         self.fields['name_of_firm'].label = "Име на Фирма"
         self.fields['bulstat'].label = "ЕИК"
         self.fields['VAT_number'].label = "Номер по ЗДДС (по избор)"
-        self.fields['address_by_registration'] = "Адрес на фирма по регистрация"
+        self.fields['address_by_registration'].label = "Адрес на фирма по регистрация"
         self.fields['owner_of_firm'].label = "МОЛ"
+        self.fields['mobile_number'].label = "Мобилен номер"
+        self.fields['static_number'].label = "Стационарен номер"
+        self.fields['email'].label = "Имейл"
         self.fields['selected_firm_for_order'].label = "Избери Фирма за фактура"
         self.fields['VAT_number'].required = False
 

@@ -1,2 +1,10 @@
 {% load i18n %}
-{% blocktrans %}Имейл за потвърждаване е изпратен на: {{email}}.{% endblocktrans %}
+<div class="site-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <h2 class="h3 mb-3 text-black">Имейл за потвърждаване е изпратен на: {{email}}.</h2>
+            </div>
+        </div>
+    </div>
+</div>
