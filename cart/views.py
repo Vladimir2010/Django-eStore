@@ -13,7 +13,7 @@ from django.views import generic
 
 from core.models import OwnerFirm
 from .forms import AddToCartForm, AddressForm, AddFirmToOrder
-from .models import Product, OrderItem, Address, Order, Category, BankAccount
+from .models import Product, OrderItem, Address, Order, Category, BankAccount, Facture
 from core.models import Firm
 from .utils import get_or_set_order_session
 
@@ -94,6 +94,9 @@ class CartView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CartView, self).get_context_data(**kwargs)
         context["order"] = get_or_set_order_session(self.request)
+        context.update({
+            "categories": Category.objects.values("name")
+        })
         return context
 
 
@@ -196,7 +199,8 @@ def checkout(request):
         "order": order,
         "firm_form": firm_form,
         "shipping_form": shipping_form,
-        "user_id": user_id
+        "user_id": user_id,
+        "categories": Category.objects.values("name")
     }
     return render(request, "cart/checkout.html", context)
 
@@ -258,7 +262,6 @@ def checkout(request):
 #         context["order"] = get_or_set_order_session(self.request)
 #         return context
 
-
 class PaymentView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'cart/payment-options.html'
 
@@ -266,6 +269,9 @@ class PaymentView(LoginRequiredMixin, generic.TemplateView):
         context = super(PaymentView, self).get_context_data(**kwargs)
         context['order'] = get_or_set_order_session(self.request)
         context['CALLBACK_URL'] = self.request.build_absolute_uri(reverse("cart:thank-you"))
+        context.update({
+            "categories": Category.objects.values("name")
+        })
         return context
 
 
@@ -298,7 +304,7 @@ class ThankYouView(generic.TemplateView):
         for order_item in order_items:
             order_item.product.stock -= order_item.quantity
         data = []
-        context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order}
+        context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order, "categories": Category.objects.values("name")}
         html_content_for_admins = render_to_string(self.template_for_email_to_admins, context, request=self.request)
         html_content_for_users = render_to_string(self.template_for_email_to_user, context, request=self.request)
         emails_admins = [email for email in settings.ADMINS]
@@ -324,6 +330,13 @@ class OrderDetailView(LoginRequiredMixin, generic.DetailView):
     queryset = Order.objects.all()
     context_object_name = 'order'
 
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        context.update({
+            "categories": Category.objects.values("name")
+        })
+        return context
+
 
 class BankPayment(LoginRequiredMixin, generic.TemplateView):
     template_name = 'cart/bank-payment.html'
@@ -335,7 +348,8 @@ class BankPayment(LoginRequiredMixin, generic.TemplateView):
         order.save()
         context = {
             'bank': bank,
-            'order': order
+            'order': order,
+            'categories': Category.objects.values("name")
         }
         return render(self.request, 'cart/bank-payment.html', context)
 
@@ -349,6 +363,7 @@ class DeliveryPayment(LoginRequiredMixin, generic.TemplateView):
         order.save()
         context = {
             'order': order,
+            'categories': Category.objects.values("name")
         }
         return render(self.request, 'cart/delivery-payment.html', context)
 
@@ -400,7 +415,6 @@ def search_view(request):
     }
     return render(request, 'cart/product_list.html', context)
 
-
-def test(request):
-
-    return render(request, 'cart/test.html')
+#
+# def test(request):
+#     return render(request, 'cart/test.html')

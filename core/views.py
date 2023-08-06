@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import reverse, render, redirect, get_object_or_404
 from django.views import generic
-from cart.models import Order, OrderItem, Product
+from cart.models import Order, OrderItem, Product, Category
 from .forms import ContactForm, EditUserForm, FirmForm, EditFirmForm, RemoveFirmForm
 from django.core import mail
 from django.core.mail import EmailMessage
@@ -19,13 +19,15 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
         context.update({
-            "orders": Order.objects.filter(user=self.request.user, ordered=True)
+            "orders": Order.objects.filter(user=self.request.user, ordered=True),
+            "categories": Category.objects.values('name')
         })
         return context
 
 
 class HomeView(generic.TemplateView):
     template_name = 'index.html'
+
 
 
 class ContactView(generic.FormView):
@@ -67,6 +69,13 @@ class ContactView(generic.FormView):
         # )
         return super(ContactView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super(ContactView, self).get_context_data(**kwargs)
+        context.update({
+            "categories": Category.objects.values("name")
+        })
+        return context
+
 
 # Def Views
 def edit_profile_view(request):
@@ -79,7 +88,8 @@ def edit_profile_view(request):
             return redirect('profile')
     context = {
         'form': form,
-        'user': user
+        'user': user,
+        "categories": Category.objects.values("name")
     }
     return render(request, 'account/edit-user-profile.html', context)
 
@@ -96,7 +106,8 @@ def add_firm_view(request):
             return redirect('profile')
     context = {
         'form': form,
-        'user': user
+        'user': user,
+        "categories": Category.objects.values("name")
     }
     return render(request, 'firm/add-firm.html', context)
 
@@ -107,7 +118,8 @@ def view_firms(request):
 
     context = {
         'firms': firms,
-        'user': user
+        'user': user,
+        "categories": Category.objects.values("name")
     }
     return render(request, 'firm/view-firms.html', context)
 
@@ -117,7 +129,8 @@ def remove_firm(request, firm_id):
     form = RemoveFirmForm(instance=firm)
     context = {
         'firm': firm,
-        'form': form
+        'form': form,
+        "categories": Category.objects.values("name")
     }
 
     if request.method == 'POST':
@@ -181,6 +194,7 @@ def edit_firms(request, firm_id):
             return redirect('view-firms')
     context = {
         'form': form,
-        'firm': firm
+        'firm': firm,
+        "categories": Category.objects.values("name")
     }
     return render(request, 'firm/edit-firms.html', context)

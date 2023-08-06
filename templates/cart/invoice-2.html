@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="bg" lang="bg">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Проформа фактура No</title>
+    <title>Проформа фактура No{{ facture.number_of_facture }}</title>
     <style type="text/css">
         * {
             margin: 0;
@@ -180,8 +180,8 @@
                                                                 src="{% static 'images/logo.jpg' %}"/></td></tr></table></a></span>
 </p>
 <h1 style="padding-top: 6pt;padding-left: 160pt;text-indent: 0pt;text-align: center;">Проформа фактура</h1>
-<h2 style="padding-top: 9pt;padding-left: 160pt;text-indent: 0pt;text-align: center;">№ {{ facture.number_of_facture }}
-    / от {{ facture.facture_date }}</h2>
+<h2 style="padding-top: 9pt;padding-left: 160pt;text-indent: 0pt;text-align: center;">No {{ facture.number_of_facture }}
+    / от {{ facture.date_of_facture }}</h2>
 <p style="text-indent: 0pt;text-align: left;"><br/></p>
 <table style="border-collapse:collapse;margin-left:5.8865pt" cellspacing="0">
     <tr style="height:16pt">
