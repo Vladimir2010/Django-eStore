@@ -4,7 +4,7 @@ from django.db.models.signals import pre_save
 from django.shortcuts import reverse
 from django.utils.text import slugify
 from .validators import check_bank_account
-from core.models import CustomUserModel, Firm
+from core.models import CustomUserModel, Firm, OwnerFirm
 
 User = CustomUserModel
 
@@ -210,3 +210,20 @@ class BankAccount(models.Model):
 
     def __str__(self):
         return self.get_name
+
+
+class Facture(models.Model):
+    number_of_facture = models.CharField(max_length=15)
+    type_of_facture = models.CharField(max_length=16, choices=[
+        ('Проформа Фактура', 'Проформа Фактура'),
+        ('Фактура', 'Фактура')
+    ])
+    date_of_facture = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
+    firm = models.ForeignKey(Firm, on_delete=models.CASCADE)
+    owner_firm = models.ForeignKey(OwnerFirm, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    bank = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.number_of_facture} / {self.date_of_facture}"

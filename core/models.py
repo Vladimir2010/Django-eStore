@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
-from cart.models import BankAccount
 
 
 class CustomUserModel(AbstractUser):
@@ -69,15 +68,6 @@ class Firm(models.Model):
 
     def __str__(self):
         return self.name_of_firm
-
-
-class Facture(models.Model):
-    number_of_facture = models.CharField(max_length=15)
-    user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
-    firm = models.ForeignKey(Firm, on_delete=models.CASCADE)
-    owner_firm = models.ForeignKey(OwnerFirm, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    bank = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
 
 
 
