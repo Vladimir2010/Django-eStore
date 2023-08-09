@@ -176,7 +176,7 @@
 </head>
 <body>
 <p style="padding-left: 9pt;text-indent: 0pt;text-align: left;"><span><a href="#"><table
-        border="0" cellspacing="0" cellpadding="0"><tr><td><img width="712" height="69"
+        border="0" cellspacing="0" cellpadding="0"><tr><td><img width="712" height="669"
                                                                 src="{% static 'images/logo.jpg' %}"/></td></tr></table></a></span>
 </p>
 <h1 style="padding-top: 6pt;padding-left: 160pt;text-indent: 0pt;text-align: center;">Проформа фактура</h1>
@@ -287,7 +287,7 @@
             <p class="s1" style="padding-right: 1pt;text-indent: 0pt;line-height: 12pt;text-align: right;">Стойност </p>
             <p class="s1" style="padding-right: 1pt;text-indent: 0pt;line-height: 12pt;text-align: right;">лв.</p></td>
     </tr>
-    {% for i in order_items_set.count %}
+    {% for i in count %}
         {% for item in order_items %}
             <tr style="height:46pt">
                 <td style="width:16pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">

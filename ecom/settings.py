@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     # Bootstrap
     'crispy_forms',
     'crispy_bootstrap4',
@@ -163,7 +164,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -178,3 +179,13 @@ if DEBUG is False:
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '401840202454-8cs05gb1d6r6forbpgq2hon0ri9r6d2a.apps.googleusercontent.com',
+            'secret': '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',
+        }
+    }
+}

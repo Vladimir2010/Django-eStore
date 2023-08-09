@@ -10,6 +10,11 @@ from django.core import mail
 from django.core.mail import EmailMessage
 from .models import CustomUserModel, Firm
 from cart.utils import get_or_set_order_session
+from django.views.defaults import (page_not_found, server_error, bad_request, permission_denied,
+    server_error)
+
+from django.shortcuts import render
+from django.template import RequestContext
 
 
 # Class Based Views
@@ -27,7 +32,6 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
 
 class HomeView(generic.TemplateView):
     template_name = 'index.html'
-
 
 
 class ContactView(generic.FormView):
@@ -77,7 +81,24 @@ class ContactView(generic.FormView):
         return context
 
 
-# Def Views
+def page_not_found_view(request, exception):
+    return render(request, '404.html', status=404)
+
+
+def handler400(request, *args, **argv):
+    return render(request, '400.html', status=404)
+
+
+def handler500(request, *args, **argv):
+    return render(request, '500.html', status=404)
+
+
+def handler403(request, *args, **argv):
+    return render(request, '403.html', status=404)
+
+
+
+
 def edit_profile_view(request):
     user = request.user
     form = EditUserForm(instance=user)
@@ -164,25 +185,6 @@ def update_cart_view(request, product_id):
 
     return render(request, 'cart/update-cart.html')
 
-#
-# class EditFirmView(generic.FormView):
-#     form_class = EditFirmForm
-#     template_name = 'firm/edit-firms.html'
-#
-#     def get_success_url(self):
-#         return reverse("view-firms")
-#
-#     def form_valid(self, form):
-#         firm = Firm.objects.get(id=self.kwargs['firm_id'])
-#         form = EditFirmForm(request.POST, instance=firm)
-#         form.save()
-#         return super(EditFirmForm, self).form_valid(form)
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(EditFirmView, self).get_context_data(**kwargs)
-#         context['firm'] = Firm.objects.get(id=self.kwargs['firm_id'])
-#         context['form'] = self.form_class(instance=context['firm'])
-#         return context
 
 def edit_firms(request, firm_id):
     firm = Firm.objects.get(id=firm_id)

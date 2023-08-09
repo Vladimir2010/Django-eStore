@@ -30,16 +30,16 @@ class AddToCartForm(forms.ModelForm):
 
 class AddFirmToOrder(forms.Form):
     name_of_firm = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Име на Фирма"
+        'placeholder': "Име на Фирма / Име на физ. лице"
     }))
     bulstat = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "ЕИК"
+        'placeholder': "ЕИК/ЕГН"
     }))
     VAT_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'placeholder': "Номер по ЗДДС (по избор)"
     }))
     address_by_registration = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Адрес на фирма по регистрация"
+        'placeholder': "Адрес по регистрация"
     }))
     owner_of_firm = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'placeholder': "МОЛ"
@@ -71,10 +71,10 @@ class AddFirmToOrder(forms.Form):
         )
 
         self.fields['selected_firm_for_order'].queryset = firm_form_qs
-        self.fields['name_of_firm'].label = "Име на Фирма"
-        self.fields['bulstat'].label = "ЕИК"
+        self.fields['name_of_firm'].label = "Име на Фирма / Име на физ. лице"
+        self.fields['bulstat'].label = "ЕИК/ЕГН"
         self.fields['VAT_number'].label = "Номер по ЗДДС (по избор)"
-        self.fields['address_by_registration'].label = "Адрес на фирма по регистрация"
+        self.fields['address_by_registration'].label = "Адрес по регистрация"
         self.fields['owner_of_firm'].label = "МОЛ"
         self.fields['mobile_number'].label = "Мобилен номер"
         self.fields['static_number'].label = "Стационарен номер"
@@ -120,8 +120,11 @@ class AddressForm(forms.Form):
 
     # Initial and forms query-sets
     def __init__(self, *args, **kwargs):
-        user_id = kwargs.pop('user_id')
-        super().__init__(*args, **kwargs)
+        if kwargs.get('user_id'):
+            user_id = kwargs.pop('user_id')
+            super().__init__(*args, **kwargs)
+        else:
+            super().__init__(*args, **kwargs)
 
         user = User.objects.get(id=user_id)
 

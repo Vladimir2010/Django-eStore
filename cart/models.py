@@ -93,7 +93,6 @@ class OrderItem(models.Model):
 
 
 class Order(models.Model):
-
     user = models.ForeignKey(
         User, blank=True, null=True, on_delete=models.CASCADE)
     start_date = models.DateTimeField(auto_now_add=True)
@@ -110,6 +109,7 @@ class Order(models.Model):
         Address, related_name='shipping_address', blank=True, null=True, on_delete=models.SET_NULL)
     firm = models.ForeignKey(
         Firm, related_name='firm', blank=True, null=True, on_delete=models.SET_NULL)
+    facture_need = models.BooleanField(default=False)
 
     def __str__(self):
         return self.reference_number

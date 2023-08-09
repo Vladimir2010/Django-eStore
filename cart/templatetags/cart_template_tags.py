@@ -13,7 +13,10 @@ def cart_item_count(request):
 
 @register.filter
 def increment(value):
-    return value + 1
+    if value == 1 or value == "1":
+        return value
+    else:
+        return value + 1
 
 @register.filter
 def dds(value):

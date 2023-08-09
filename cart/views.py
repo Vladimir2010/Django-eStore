@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, reverse, redirect, render
+from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.views import generic
 
@@ -129,12 +130,18 @@ class RemoveFromCartView(generic.View):
         return redirect("cart:summary")
 
 
+@login_required
 def checkout(request):
     user = request.user
     user_id = request.user.id
     order = get_or_set_order_session(request)
     shipping_form = AddressForm(user_id=user_id)
     firm_form = AddFirmToOrder(user_id=user_id)
+    facture = request.POST.get('facture')
+    is_facture = facture == 'on'
+    if is_facture:
+        order.facture_need = True
+        order.save()
 
     if request.method == "POST":
         add_firm = request.POST.get('add-firm')
@@ -175,24 +182,27 @@ def checkout(request):
                     )
                 order.save()
                 return redirect("cart:payment")
+            else:
+                shipping_form = AddressForm(user_id=user_id)
+                firm_form = AddFirmToOrder(user_id=user_id)
 
         else:
             shipping_form = AddressForm(request.POST, user_id=user_id)
             if shipping_form.is_valid():
-                    selected_shipping_address = shipping_form.cleaned_data.get('selected_shipping_address')
-                    if selected_shipping_address:
-                        order.shipping_address = selected_shipping_address
-                    else:
-                        order.shipping_address = Address.objects.create(
-                            address_type='S',
-                            user=user,
-                            address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
-                            address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
-                            zip_code=shipping_form.cleaned_data['shipping_zip_code'],
-                            city=shipping_form.cleaned_data['shipping_city'],
-                        )
-                    order.save()
-                    return redirect("cart:payment")
+                selected_shipping_address = shipping_form.cleaned_data.get('selected_shipping_address')
+                if selected_shipping_address:
+                    order.shipping_address = selected_shipping_address
+                else:
+                    order.shipping_address = Address.objects.create(
+                        address_type='S',
+                        user=user,
+                        address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
+                        address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
+                        zip_code=shipping_form.cleaned_data['shipping_zip_code'],
+                        city=shipping_form.cleaned_data['shipping_city'],
+                    )
+                order.save()
+                return redirect("cart:payment")
 
 
     context = {
@@ -301,10 +311,27 @@ class ThankYouView(generic.TemplateView):
         order.ordered = True
         order.payment_method = order.get_payment_method
         order.save()
+        if order.payment_method == "Наложен Платеж":
+            type = "Фактура"
+        else:
+            type = "Проформа Фактура"
+        if order.facture_need:
+            facture = Facture.objects.create(
+                order=order,
+                number_of_facture=order.order_number,
+                type_of_facture=type,
+                date_of_facture=date_of_order,
+                user=user,
+                firm=order.firm,
+                owner_firm=OwnerFirm.objects.first(),
+                bank=BankAccount.objects.first(),
+            )
+            return reverse("cart:facture", facture.id) + f'?order={order}&facture={facture}&order_items={order_items}'
         for order_item in order_items:
             order_item.product.stock -= order_item.quantity
         data = []
-        context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order, "categories": Category.objects.values("name")}
+        context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order,
+                   "categories": Category.objects.values("name")}
         html_content_for_admins = render_to_string(self.template_for_email_to_admins, context, request=self.request)
         html_content_for_users = render_to_string(self.template_for_email_to_user, context, request=self.request)
         emails_admins = [email for email in settings.ADMINS]
@@ -415,6 +442,29 @@ def search_view(request):
     }
     return render(request, 'cart/product_list.html', context)
 
-#
-# def test(request):
-#     return render(request, 'cart/test.html')
+
+class FactureView(LoginRequiredMixin, generic.TemplateView):
+    def get(self, request, *args, **kwargs):
+        # Facture, order_items, order
+        order = request.GET.get('order')
+        facture = request.GET.get('facture')
+        order_items = request.GET.get('order_items')
+        if order is None:
+            order = get_or_set_order_session(request)
+        if order_items is None:
+            order_items = OrderItem.objects.filter(order=order)
+        if facture is None:
+            facture = Facture.objects.get(number_of_facture=order.id)
+
+        count = order_items.count()
+        template_count = range(count)
+        context = {
+            'order': order,
+            "facture": facture,
+            'order_items': order_items,
+            'count': template_count,
+            'categories': Category.objects.values("name")
+        }
+
+        html_contents
+        return render(self.request, 'cart/invoice-2.html', context)
