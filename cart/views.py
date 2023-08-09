@@ -6,10 +6,10 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, reverse, redirect, render
 from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template
 from django.views import generic
 
 from core.models import OwnerFirm
@@ -17,6 +17,8 @@ from .forms import AddToCartForm, AddressForm, AddFirmToOrder
 from .models import Product, OrderItem, Address, Order, Category, BankAccount, Facture
 from core.models import Firm
 from .utils import get_or_set_order_session
+from xhtml2pdf import pisa
+
 
 
 class ProductListView(generic.ListView):
@@ -157,29 +159,34 @@ def checkout(request):
                 if selected_firm:
                     order.firm = selected_firm
                 else:
-                    order.firm = Firm.objects.create(
-                        user=user,
-                        name_of_firm=firm_form.cleaned_data['name_of_firm'],
-                        bulstat=firm_form.cleaned_data['bulstat'],
-                        VAT_number=firm_form.cleaned_data['VAT_number'],
-                        address_by_registration=firm_form.cleaned_data['address_by_registration'],
-                        owner_of_firm=firm_form.cleaned_data['owner_of_firm'],
-                        mobile_number=firm_form.cleaned_data['mobile_number'],
-                        static_number=firm_form.cleaned_data['static_number'],
-                        email=firm_form.cleaned_data['email'],
-                    )
+                    firm = firm_form.save()
+                    order.firm = firm
+
+                    # order.firm = Firm.objects.create(
+                    #     user=user,
+                    #     name_of_firm=firm_form.cleaned_data['name_of_firm'],
+                    #     bulstat=firm_form.cleaned_data['bulstat'],
+                    #     VAT_number=firm_form.cleaned_data['VAT_number'],
+                    #     address_by_registration=firm_form.cleaned_data['address_by_registration'],
+                    #     owner_of_firm=firm_form.cleaned_data['owner_of_firm'],
+                    #     mobile_number=firm_form.cleaned_data['mobile_number'],
+                    #     static_number=firm_form.cleaned_data['static_number'],
+                    #     email=firm_form.cleaned_data['email'],
+                    # )
 
                 if selected_shipping_address:
                     order.shipping_address = selected_shipping_address
                 else:
-                    order.shipping_address = Address.objects.create(
-                        address_type='S',
-                        user=user,
-                        address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
-                        address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
-                        zip_code=shipping_form.cleaned_data['shipping_zip_code'],
-                        city=shipping_form.cleaned_data['shipping_city'],
-                    )
+                    shipping = shipping_form.save()
+                    order.shipping_address = shipping
+                    # order.shipping_address = Address.objects.create(
+                    #     address_type='S',
+                    #     user=user,
+                    #     address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
+                    #     address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
+                    #     zip_code=shipping_form.cleaned_data['shipping_zip_code'],
+                    #     city=shipping_form.cleaned_data['shipping_city'],
+                    # )
                 order.save()
                 return redirect("cart:payment")
             else:
@@ -203,7 +210,8 @@ def checkout(request):
                     )
                 order.save()
                 return redirect("cart:payment")
-
+            else:
+                shipping_form = AddressForm(user_id=user_id)
 
     context = {
         "order": order,
@@ -311,6 +319,8 @@ class ThankYouView(generic.TemplateView):
         order.ordered = True
         order.payment_method = order.get_payment_method
         order.save()
+        context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order,
+                   "categories": Category.objects.values("name")}
         if order.payment_method == "Наложен Платеж":
             type = "Фактура"
         else:
@@ -326,12 +336,12 @@ class ThankYouView(generic.TemplateView):
                 owner_firm=OwnerFirm.objects.first(),
                 bank=BankAccount.objects.first(),
             )
-            return reverse("cart:facture", facture.id) + f'?order={order}&facture={facture}&order_items={order_items}'
+            # return redirect("cart:facture", facture.id) + f'?order={order}&facture={facture}&order_items={order_items}'
+            context['facture'] = facture
         for order_item in order_items:
             order_item.product.stock -= order_item.quantity
+            order_item.product.save()
         data = []
-        context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order,
-                   "categories": Category.objects.values("name")}
         html_content_for_admins = render_to_string(self.template_for_email_to_admins, context, request=self.request)
         html_content_for_users = render_to_string(self.template_for_email_to_user, context, request=self.request)
         emails_admins = [email for email in settings.ADMINS]
@@ -349,7 +359,7 @@ class ThankYouView(generic.TemplateView):
                   fail_silently=False, html_message=html_content_for_admins)
         send_mail(subject, "Вашата поръчка е успешно поръчана", from_email, recipient_list_for_users,
                   fail_silently=False, html_message=html_content_for_users)
-        return render(self.request, 'cart/thanks.html')
+        return render(self.request, 'cart/thanks.html', context)
 
 
 class OrderDetailView(LoginRequiredMixin, generic.DetailView):
@@ -395,38 +405,6 @@ class DeliveryPayment(LoginRequiredMixin, generic.TemplateView):
         return render(self.request, 'cart/delivery-payment.html', context)
 
 
-#
-# def pdf_invoice(request):
-#     buffer = io.BytesIO()
-#     pdf = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
-#     object = pdf.beginText()
-#     object.setTextOrigin(inch, inch)
-#     # object.setFont("Arial", 20)
-#     order = get_or_set_order_session(request)
-#     items = order.items
-#     from reportlab.pdfbase import pdfmetrics
-#     from reportlab.pdfbase.ttfonts import TTFont
-#     pdfmetrics.registerFont(TTFont('arial', 'fonts/Arial.ttf'))
-#     # p = Paragraph(data.decode('utf-8'), style=styNormal)
-#
-#     lines = [
-#         "Проформа Фактура",
-#         "Номер: : " + str(order.id),
-#         "от: " + order.ordered_date,
-#         'Получател: ' + order.get_full_user_name,
-#         "Адрес: " + order.shipping_address,]
-#
-#     for line in lines:
-#         p = Paragraph(line.decode('utf-8'), style=styNormal)
-#         object.textLine(p)
-#
-#     pdf.drawText(object)
-#     pdf.showPage()
-#     pdf.save()
-#     buffer.seek(0)
-#
-#     return FileResponse(buffer, as_attachment=True, filename='invoice.pdf')
-
 def search_view(request):
     query = request.GET.get('q')
     if query == '':
@@ -446,25 +424,46 @@ def search_view(request):
 class FactureView(LoginRequiredMixin, generic.TemplateView):
     def get(self, request, *args, **kwargs):
         # Facture, order_items, order
-        order = request.GET.get('order')
-        facture = request.GET.get('facture')
-        order_items = request.GET.get('order_items')
-        if order is None:
-            order = get_or_set_order_session(request)
-        if order_items is None:
-            order_items = OrderItem.objects.filter(order=order)
-        if facture is None:
-            facture = Facture.objects.get(number_of_facture=order.id)
-
+        facture = Facture.objects.get(id=kwargs['facture_id'])
+        order = facture.order
+        order_items = OrderItem.objects.filter(order=order)
+        bank = BankAccount.objects.first()
         count = order_items.count()
         template_count = range(count)
+        template = get_template('cart/invoice-2.html')
         context = {
             'order': order,
             "facture": facture,
             'order_items': order_items,
             'count': template_count,
-            'categories': Category.objects.values("name")
+            'categories': Category.objects.values("name"),
+            'bank': bank
         }
+        html = template.render(context)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'filename="output.pdf"'
+        pisa_status = pisa.CreatePDF(html, dest=response)
 
-        html_contents
+        if pisa_status.err:
+            return HttpResponse('Error generating PDF', status=500)
+        return response
+
         return render(self.request, 'cart/invoice-2.html', context)
+
+def generate_invoice(request):
+    template_path = 'cart/invoice-2.html'
+    context = {'data': 'Hello from Django to PDF'}
+
+    # Render the template with context
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Create a PDF
+    response = HttpResponse(content_type='application/pdf; charset=utf-8')
+    response['Content-Disposition'] = 'filename="output.pdf"'
+    pisa_status = pisa.CreatePDF(html, dest=response, encoding='utf-8')
+
+    if pisa_status.err:
+        return HttpResponse('Error generating PDF', status=500)
+    return response
+

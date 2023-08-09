@@ -20,13 +20,13 @@ def increment(value):
 
 @register.filter
 def dds(value):
-    value = int(value)
-    value_with_dds = value * 1,2
-    dds = value_with_dds - value
-    return str(dds)
+    value = float(value)
+    value_without_dds = value /  1.2
+    dds = value - value_without_dds
+    return f"{dds:.2f}"
 
 @register.filter
 def total_price_withot_dds(value):
-    value = int(value)
+    value = float(value)
     value_without_dds = value / 1,2
     return str(value_without_dds)

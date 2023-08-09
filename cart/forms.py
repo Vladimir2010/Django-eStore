@@ -28,7 +28,7 @@ class AddToCartForm(forms.ModelForm):
                 f"Максималното налично количество е: {product.stock}")
 
 
-class AddFirmToOrder(forms.Form):
+class AddFirmToOrder(forms.ModelForm):
     name_of_firm = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'placeholder': "Име на Фирма / Име на физ. лице"
     }))
@@ -54,6 +54,11 @@ class AddFirmToOrder(forms.Form):
         'placeholder': "Имейл"
     }))
     selected_firm_for_order = forms.ModelChoiceField(Firm.objects.none(), required=False)
+
+    class Meta:
+        model = Firm
+        fields = '__all__'
+        exclude = ['user', 'is_deleted']
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.get('user_id')
