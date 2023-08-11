@@ -168,6 +168,8 @@ class ThankYouView(generic.TemplateView):
             order.ordered = True
             order.payment_method = order.get_payment_method
             order.save()
+            context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order,
+                       "categories": Category.objects.values("name")}
             if order.payment_method == "Наложен Платеж":
                 type = "Фактура"
             else:
@@ -188,8 +190,6 @@ class ThankYouView(generic.TemplateView):
             for order_item in order_items:
                 order_item.product.stock -= order_item.quantity
                 order_item.product.save()
-            context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order,
-                       "categories": Category.objects.values("name")}
             data = []
             html_content_for_admins = render_to_string(self.template_for_email_to_admins, context, request=self.request)
             html_content_for_users = render_to_string(self.template_for_email_to_user, context, request=self.request)
