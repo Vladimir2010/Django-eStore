@@ -2,23 +2,19 @@ import datetime
 from datetime import date
 
 from django.conf import settings
-from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, reverse, redirect, render
-from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string, get_template
+from django.template.loader import render_to_string
 from django.views import generic
 
 from core.models import OwnerFirm
 from .forms import AddToCartForm, AddressForm, AddFirmToOrder
 from .models import Product, OrderItem, Address, Order, Category, BankAccount, Facture
-from core.models import Firm
 from .utils import get_or_set_order_session
-from xhtml2pdf import pisa
-
 
 
 class ProductListView(generic.ListView):
@@ -131,154 +127,6 @@ class RemoveFromCartView(generic.View):
         order_item.delete()
         return redirect("cart:summary")
 
-
-@login_required
-def checkout(request):
-    user = request.user
-    user_id = request.user.id
-    order = get_or_set_order_session(request)
-    shipping_form = AddressForm(user_id=user_id)
-    firm_form = AddFirmToOrder(user_id=user_id)
-    facture = request.POST.get('facture')
-    is_facture = facture == 'on'
-    if is_facture:
-        order.facture_need = True
-        order.save()
-
-    if request.method == "POST":
-        add_firm = request.POST.get('add-firm')
-        is_firm_added = add_firm == 'on'
-        if is_firm_added:
-            shipping_form = AddressForm(request.POST, user_id=user_id)
-            firm_form = AddFirmToOrder(request.POST, user_id=user_id)
-
-            if shipping_form.is_valid() and firm_form.is_valid():
-                selected_firm = firm_form.cleaned_data.get('selected_firm_for_order')
-                selected_shipping_address = shipping_form.cleaned_data.get('selected_shipping_address')
-
-                if selected_firm:
-                    order.firm = selected_firm
-                else:
-                    firm = firm_form.save()
-                    order.firm = firm
-
-                    # order.firm = Firm.objects.create(
-                    #     user=user,
-                    #     name_of_firm=firm_form.cleaned_data['name_of_firm'],
-                    #     bulstat=firm_form.cleaned_data['bulstat'],
-                    #     VAT_number=firm_form.cleaned_data['VAT_number'],
-                    #     address_by_registration=firm_form.cleaned_data['address_by_registration'],
-                    #     owner_of_firm=firm_form.cleaned_data['owner_of_firm'],
-                    #     mobile_number=firm_form.cleaned_data['mobile_number'],
-                    #     static_number=firm_form.cleaned_data['static_number'],
-                    #     email=firm_form.cleaned_data['email'],
-                    # )
-
-                if selected_shipping_address:
-                    order.shipping_address = selected_shipping_address
-                else:
-                    shipping = shipping_form.save()
-                    order.shipping_address = shipping
-                    # order.shipping_address = Address.objects.create(
-                    #     address_type='S',
-                    #     user=user,
-                    #     address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
-                    #     address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
-                    #     zip_code=shipping_form.cleaned_data['shipping_zip_code'],
-                    #     city=shipping_form.cleaned_data['shipping_city'],
-                    # )
-                order.save()
-                return redirect("cart:payment")
-            else:
-                shipping_form = AddressForm(user_id=user_id)
-                firm_form = AddFirmToOrder(user_id=user_id)
-
-        else:
-            shipping_form = AddressForm(request.POST, user_id=user_id)
-            if shipping_form.is_valid():
-                selected_shipping_address = shipping_form.cleaned_data.get('selected_shipping_address')
-                if selected_shipping_address:
-                    order.shipping_address = selected_shipping_address
-                else:
-                    order.shipping_address = Address.objects.create(
-                        address_type='S',
-                        user=user,
-                        address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
-                        address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
-                        zip_code=shipping_form.cleaned_data['shipping_zip_code'],
-                        city=shipping_form.cleaned_data['shipping_city'],
-                    )
-                order.save()
-                return redirect("cart:payment")
-            else:
-                shipping_form = AddressForm(user_id=user_id)
-
-    context = {
-        "order": order,
-        "firm_form": firm_form,
-        "shipping_form": shipping_form,
-        "user_id": user_id,
-        "categories": Category.objects.values("name")
-    }
-    return render(request, "cart/checkout.html", context)
-
-
-# class CheckoutView(LoginRequiredMixin, generic.FormView):
-#     template_name = 'cart/checkout.html'
-#     form_class = AddressForm
-#
-#     def get_success_url(self):
-#         return reverse("cart:payment")
-#
-#     def form_valid(self, form):
-#         order = get_or_set_order_session(self.request)
-#         # selected_firm_for_order = form.cleaned_data.get(
-#         #     'selected_firm_for_order')
-#         selected_shipping_address = form.cleaned_data.get(
-#             'selected_shipping_address')
-#
-#         if selected_shipping_address:
-#             order.shipping_address = selected_shipping_address
-#         else:
-#             address = Address.objects.create(
-#                 address_type='S',
-#                 user=self.request.user,
-#                 address_line_1=form.cleaned_data['shipping_address_line_1'],
-#                 address_line_2=form.cleaned_data['shipping_address_line_2'],
-#                 zip_code=form.cleaned_data['shipping_zip_code'],
-#                 city=form.cleaned_data['shipping_city'],
-#             )
-#             order.shipping_address = address
-#
-#         # if selected_firm_for_order:
-#         #     order.firm = selected_firm_for_order
-#         # else:
-#         #     firm = Firm.objects.create(
-#         #         user = self.request.user,
-#         #         name_of_firm = form.cleaned_data['name_of_firm'],
-#         #         bulstat = form.cleaned_data['bulstat'],
-#         #         VAT_number = form.cleaned_data['VAT_number'],
-#         #         address_by_registration = form.cleaned_data['address_by_registration'],
-#         #         owner_of_firm = form.cleaned_data['owner_of_firm'],
-#         #     )
-#         #     order.firm = firm
-#
-#         order.save()
-#         messages.info(
-#             self.request, "Успешно добавихте адреса си!")
-#         messages.info(
-#             self.request, "Успешно добавихте фирмата си!")
-#         return super(CheckoutView, self).form_valid(form)
-#
-#     def get_form_kwargs(self):
-#         kwargs = super(CheckoutView, self).get_form_kwargs()
-#         kwargs["user_id"] = self.request.user.id
-#         return kwargs
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(CheckoutView, self).get_context_data(**kwargs)
-#         context["order"] = get_or_set_order_session(self.request)
-#         return context
 
 class PaymentView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'cart/payment-options.html'
@@ -405,6 +253,28 @@ class DeliveryPayment(LoginRequiredMixin, generic.TemplateView):
         return render(self.request, 'cart/delivery-payment.html', context)
 
 
+class FactureView(LoginRequiredMixin, generic.TemplateView):
+    def get(self, request, *args, **kwargs):
+        # Facture, order_items, order
+        facture = Facture.objects.get(id=kwargs['facture_id'])
+        order = facture.order
+        order_items = OrderItem.objects.filter(order=order)
+        bank = BankAccount.objects.first()
+        count = order_items.count()
+        template_count = range(count)
+        # template = get_template('cart/invoice-2.html')
+        context = {
+            'order': order,
+            "facture": facture,
+            'order_items': order_items,
+            'count': template_count,
+            'categories': Category.objects.values("name"),
+            'bank': bank
+        }
+
+        return render(self.request, 'cart/invoice.html', context)
+
+
 def search_view(request):
     query = request.GET.get('q')
     if query == '':
@@ -421,49 +291,73 @@ def search_view(request):
     return render(request, 'cart/product_list.html', context)
 
 
-class FactureView(LoginRequiredMixin, generic.TemplateView):
-    def get(self, request, *args, **kwargs):
-        # Facture, order_items, order
-        facture = Facture.objects.get(id=kwargs['facture_id'])
-        order = facture.order
-        order_items = OrderItem.objects.filter(order=order)
-        bank = BankAccount.objects.first()
-        count = order_items.count()
-        template_count = range(count)
-        template = get_template('cart/invoice-2.html')
-        context = {
-            'order': order,
-            "facture": facture,
-            'order_items': order_items,
-            'count': template_count,
-            'categories': Category.objects.values("name"),
-            'bank': bank
-        }
-        html = template.render(context)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'filename="output.pdf"'
-        pisa_status = pisa.CreatePDF(html, dest=response)
+@login_required
+def checkout(request):
+    user = request.user
+    user_id = request.user.id
+    order = get_or_set_order_session(request)
+    shipping_form = AddressForm(user_id=user_id)
+    firm_form = AddFirmToOrder(user_id=user_id)
+    facture = request.POST.get('facture')
+    is_facture = facture == 'on'
+    if is_facture:
+        order.facture_need = True
+        order.save()
 
-        if pisa_status.err:
-            return HttpResponse('Error generating PDF', status=500)
-        return response
+    if request.method == "POST":
+        add_firm = request.POST.get('add-firm')
+        is_firm_added = add_firm == 'on'
+        if is_firm_added:
+            shipping_form = AddressForm(request.POST, user_id=user_id)
+            firm_form = AddFirmToOrder(request.POST, user_id=user_id)
 
-        return render(self.request, 'cart/invoice-2.html', context)
+            if shipping_form.is_valid() and firm_form.is_valid():
+                selected_firm = firm_form.cleaned_data.get('selected_firm_for_order')
+                selected_shipping_address = shipping_form.cleaned_data.get('selected_shipping_address')
 
-def generate_invoice(request):
-    template_path = 'cart/invoice-2.html'
-    context = {'data': 'Hello from Django to PDF'}
+                if selected_firm:
+                    order.firm = selected_firm
+                else:
+                    firm = firm_form.save(commit=False)
+                    firm.user = user
+                    order.firm = firm.save()
+                if selected_shipping_address:
+                    order.shipping_address = selected_shipping_address
+                else:
+                    shipping = shipping_form.save(commit=False)
+                    shipping.user = user
+                    order.shipping_address = shipping.save()
+                order.save()
+                return redirect("cart:payment")
+            else:
+                shipping_form = AddressForm(user_id=user_id)
+                firm_form = AddFirmToOrder(user_id=user_id)
 
-    # Render the template with context
-    template = get_template(template_path)
-    html = template.render(context)
+        else:
+            shipping_form = AddressForm(request.POST, user_id=user_id)
+            if shipping_form.is_valid():
+                selected_shipping_address = shipping_form.cleaned_data.get('selected_shipping_address')
+                if selected_shipping_address:
+                    order.shipping_address = selected_shipping_address
+                else:
+                    order.shipping_address = Address.objects.create(
+                        address_type='S',
+                        user=user,
+                        address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
+                        address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
+                        zip_code=shipping_form.cleaned_data['shipping_zip_code'],
+                        city=shipping_form.cleaned_data['shipping_city'],
+                    )
+                order.save()
+                return redirect("cart:payment")
+            else:
+                shipping_form = AddressForm(user_id=user_id)
 
-    # Create a PDF
-    response = HttpResponse(content_type='application/pdf; charset=utf-8')
-    response['Content-Disposition'] = 'filename="output.pdf"'
-    pisa_status = pisa.CreatePDF(html, dest=response, encoding='utf-8')
-
-    if pisa_status.err:
-        return HttpResponse('Error generating PDF', status=500)
-    return response
-
+    context = {
+        "order": order,
+        "firm_form": firm_form,
+        "shipping_form": shipping_form,
+        "user_id": user_id,
+        "categories": Category.objects.values("name")
+    }
+    return render(request, "cart/checkout.html", context)

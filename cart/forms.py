@@ -29,36 +29,49 @@ class AddToCartForm(forms.ModelForm):
 
 
 class AddFirmToOrder(forms.ModelForm):
-    name_of_firm = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Име на Фирма / Име на физ. лице"
-    }))
-    bulstat = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "ЕИК/ЕГН"
-    }))
-    VAT_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Номер по ЗДДС (по избор)"
-    }))
-    address_by_registration = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Адрес по регистрация"
-    }))
-    owner_of_firm = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "МОЛ"
-    }))
-    mobile_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Мобилен номер"
-    }))
-    static_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Стационарен номер"
-    }))
-    email = forms.EmailField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Имейл"
-    }))
     selected_firm_for_order = forms.ModelChoiceField(Firm.objects.none(), required=False)
 
     class Meta:
         model = Firm
         fields = '__all__'
         exclude = ['user', 'is_deleted']
+        widgets = {
+            'name_of_firm': forms.TextInput(attrs={
+                'placeholder': "Име на Фирма / Име на физ. лице"
+            }),
+            'bulstat': forms.TextInput(attrs={
+                'placeholder': "ЕИК/ЕГН"
+            }),
+            'vat_number': forms.TextInput(attrs={
+                'placeholder': "Номер по ЗДДС (по избор)"
+            }),
+            'address_by_registration': forms.TextInput(attrs={
+                'placeholder': "Адрес по регистрация"
+            }),
+            'owner_of_firm': forms.TextInput(attrs={
+                'placeholder': "МОЛ"
+            }),
+            'mobile_number': forms.TextInput(attrs={
+                'placeholder': "Мобилен номер"
+            }),
+            'static_number': forms.TextInput(attrs={
+                'placeholder': "Стационарен номер"
+            }),
+            'email': forms.TextInput(attrs={
+                'placeholder': "Имейл"
+            })
+        }
+        labels = {
+            'name_of_firm': "Име на Фирма / Име на физ. лице",
+            'bulstat': "ЕИК/ЕГН",
+            'VAT_number': "Номер по ЗДДС (по избор)",
+            'address_by_registration': "Адрес по регистрация",
+            'owner_of_firm': "МОЛ",
+            'mobile_number': "Мобилен номер",
+            'static_number': "Стационарен номер",
+            'email': "Имейл"
+        }
+
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.get('user_id')
@@ -76,54 +89,39 @@ class AddFirmToOrder(forms.ModelForm):
         )
 
         self.fields['selected_firm_for_order'].queryset = firm_form_qs
-        self.fields['name_of_firm'].label = "Име на Фирма / Име на физ. лице"
-        self.fields['bulstat'].label = "ЕИК/ЕГН"
-        self.fields['VAT_number'].label = "Номер по ЗДДС (по избор)"
-        self.fields['address_by_registration'].label = "Адрес по регистрация"
-        self.fields['owner_of_firm'].label = "МОЛ"
-        self.fields['mobile_number'].label = "Мобилен номер"
-        self.fields['static_number'].label = "Стационарен номер"
-        self.fields['email'].label = "Имейл"
         self.fields['selected_firm_for_order'].label = "Избери Фирма за фактура"
-        self.fields['VAT_number'].required = False
-
-    def clean(self):
-        data = self.cleaned_data
-
-        selected_firm_for_order = data.get('selected_firm_for_order', None)
-        if selected_firm_for_order is None:
-            if not data.get('name_of_firm', None):
-                self.add_error("name_of_firm", "Моля попълнете полето")
-            if not data.get('bulstat', None):
-                self.add_error('bulstat', "Моля попълнете полето")
-            if not data.get('VAT_number', ''):
-                data['VAT_number'] = ''
-            if not data.get('address_by_registration', None):
-                self.add_error("address_by_registration", "Моля попълнете полето")
-            if not data.get('owner_of_firm', None):
-                self.add_error("owner_of_firm", "Моля попълнете полето")
 
 
-class AddressForm(forms.Form):
-    # Fields
-    shipping_address_line_1 = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Адрес за доставка"
-    }))
-    shipping_address_line_2 = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Адрес за доставка 2"
-    }))
-    shipping_zip_code = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Пощенски код"
-    }))
-    shipping_city = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': "Град"
-    }))
-
-    # Choise fields
-
+class AddressForm(forms.ModelForm):
     selected_shipping_address = forms.ModelChoiceField(Address.objects.none(), required=False)
 
-    # Initial and forms query-sets
+    class Meta:
+        model = Address
+        fields = '__all__'
+        exclude = ['user', 'default', 'address_type']
+        widgets = {
+            'address_line_1': forms.TextInput(attrs={
+                'placeholder': "Адрес за доставка",
+
+            }),
+            'address_line_2': forms.TextInput(attrs={
+                'placeholder': "Адрес за доставка 2"
+            }),
+            'zip_code': forms.TextInput(attrs={
+                'placeholder': "Пощенски код"
+            }),
+            'city': forms.TextInput(attrs={
+                'placeholder': "Град"
+            }),
+        }
+        labels = {
+            'address_line_1': "Адрес за доставка",
+            'address_line_2': "Адрес за доставка 2",
+            'zip_code': "Пощенски код",
+            'city': "Град",
+
+        }
+
     def __init__(self, *args, **kwargs):
         if kwargs.get('user_id'):
             user_id = kwargs.pop('user_id')
@@ -133,38 +131,10 @@ class AddressForm(forms.Form):
 
         user = User.objects.get(id=user_id)
 
-
         shipping_address_qs = Address.objects.filter(
             user=user,
             address_type='S'
         )
-        #
-        # if shipping_address_qs.exists():
-        #     shipping_address_qs.address_line_2 = ''
-        # Labels of fields
         self.fields['selected_shipping_address'].queryset = shipping_address_qs
-        # labels
-        self.fields['shipping_address_line_1'].label = "Адрес за доставка"
-        self.fields['shipping_address_line_2'].label = "Адрес за доставка 2"
-        self.fields['shipping_zip_code'].label = "Пощенски код"
-        self.fields['shipping_city'].label = "Град"
         self.fields['selected_shipping_address'].label = "Избери адрес за доставка"
-        self.fields['shipping_address_line_2'].required = False
 
-
-    def clean(self):
-        # Get data
-        data = self.cleaned_data
-
-
-        # Clean data from shipping address
-        selected_shipping_address = data.get('selected_shipping_address', None)
-        if selected_shipping_address is None:
-            if not data.get('shipping_address_line_1', None):
-                self.add_error("shipping_address_line_1", "Моля попълнете полето")
-            if not data.get('shipping_address_line_2', ''):
-                data['shipping_address_line_2'] = ''
-            if not data.get('shipping_zip_code', None):
-                self.add_error("shipping_zip_code", "Моля попълнете полето")
-            if not data.get('shipping_city', None):
-                self.add_error("shipping_city", "Моля попълнете полето")

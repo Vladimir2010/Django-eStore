@@ -1,6 +1,12 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
+# from core.validators import (check_vat_number,
+#                              check_unique_vat_number_firms,
+#                              check_unique_vat_number_owner_firms,
+#                              check_unique,
+#                              check_unique_bulstat_owner_firms,
+#                              check_bulstat)
 
 
 class CustomUserModel(AbstractUser):
@@ -17,8 +23,14 @@ class CustomUserModel(AbstractUser):
 class OwnerFirm(models.Model):
     user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
     name_of_firm = models.CharField(max_length=100)
-    bulstat = models.CharField(max_length=9, unique=True)
-    VAT_number = models.CharField(max_length=11, unique=True, null=True, blank=True)
+    bulstat = models.CharField(max_length=9, validators=[
+        # check_bulstat,
+        # check_unique_bulstat_owner_firms
+    ])
+    VAT_number = models.CharField(max_length=11, null=True, blank=True, validators=[
+        # check_vat_number,
+        # check_unique_vat_number_owner_firms
+    ])
     address_by_registration = models.CharField(max_length=300)
     address_of_shop = models.CharField(max_length=300, null=True, blank=True)
     activity = models.CharField(max_length=150)
@@ -51,8 +63,14 @@ class OwnerFirm(models.Model):
 class Firm(models.Model):
     user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
     name_of_firm = models.CharField(max_length=100)
-    bulstat = models.CharField(max_length=9, unique=True)
-    VAT_number = models.CharField(max_length=11, unique=True, null=True, blank=True)
+    bulstat = models.CharField(max_length=9, validators=[
+        # check_bulstat,
+        # check_unique
+    ])
+    vat_number = models.CharField(max_length=11, validators=[
+        # check_vat_number,
+        # check_unique_vat_number_firms
+    ], null=True, blank=True)
     address_by_registration = models.CharField(max_length=200)
     owner_of_firm = models.CharField(max_length=100)
     mobile_number = models.CharField(max_length=13, null=True, blank=True)
@@ -68,7 +86,6 @@ class Firm(models.Model):
 
     def __str__(self):
         return self.name_of_firm
-
 
 
 class Customer(models.Model):
