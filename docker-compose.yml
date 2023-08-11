@@ -23,6 +23,7 @@ version: '3.4'
 
 services:
   estore:
+    image: estore
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     ports:
@@ -37,7 +38,7 @@ services:
     environment:
       POSTGRES_PASSWORD: VA0885281774
       POSTGRES_USER: postgres
-      POSTGRES_DB: e_store
+      POSTGRES_DB: estore
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ./postgresql:/var/lib/postgresql/data

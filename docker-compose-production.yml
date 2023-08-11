@@ -1,7 +1,6 @@
 version: '3.4'
 
 services:
-
   estore:
     build: .
     command: gunicorn --bind=0.0.0.0:8000 ecom.wsgi:application
