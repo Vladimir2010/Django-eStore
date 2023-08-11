@@ -161,53 +161,59 @@ class ThankYouView(generic.TemplateView):
         user = self.request.user
         firm = OwnerFirm.objects.first()
         order_items = OrderItem.objects.filter(order=order)
-        date_of_order = date.today()
-        date_time = datetime.datetime.now()
-        order.ordered_date = date_time
-        order.ordered = True
-        order.payment_method = order.get_payment_method
-        order.save()
-        context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order,
-                   "categories": Category.objects.values("name")}
-        if order.payment_method == "Наложен Платеж":
-            type = "Фактура"
+        if order_items.exists():
+            date_of_order = date.today()
+            date_time = datetime.datetime.now()
+            order.ordered_date = date_time
+            order.ordered = True
+            order.payment_method = order.get_payment_method
+            order.save()
+            if order.payment_method == "Наложен Платеж":
+                type = "Фактура"
+            else:
+                type = "Проформа Фактура"
+            if order.facture_need:
+                facture = Facture.objects.create(
+                    order=order,
+                    number_of_facture=order.order_number,
+                    type_of_facture=type,
+                    date_of_facture=date_of_order,
+                    user=user,
+                    firm=order.firm,
+                    owner_firm=OwnerFirm.objects.first(),
+                    bank=BankAccount.objects.first(),
+                )
+                # return redirect("cart:facture", facture.id) + f'?order={order}&facture={facture}&order_items={order_items}'
+                context['facture'] = facture
+            for order_item in order_items:
+                order_item.product.stock -= order_item.quantity
+                order_item.product.save()
+            context = {"order": order, "user": user, "order_items": order_items, "firm": firm, "date": date_of_order,
+                       "categories": Category.objects.values("name")}
+            data = []
+            html_content_for_admins = render_to_string(self.template_for_email_to_admins, context, request=self.request)
+            html_content_for_users = render_to_string(self.template_for_email_to_user, context, request=self.request)
+            emails_admins = [email for email in settings.ADMINS]
+            emails_admins.append(settings.NOTIFY_EMAIL)
+            emails_admins.append(settings.EMAIL_HOST_USER)
+            email_user = [user.email]
+            subject = f"Поръчка: {order.order_number}"
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list_for_admins = emails_admins
+            recipient_list_for_users = email_user
+            for i in order_items:
+                data.append({'product_name': i.product.title, 'quantity': i.quantity, 'price': i.product.get_price(),
+                             'total': i.get_total_item_price()})
+            send_mail(subject, "Нова поръчка", from_email, recipient_list_for_admins,
+                      fail_silently=False, html_message=html_content_for_admins)
+            send_mail(subject, "Вашата поръчка е успешно поръчана", from_email, recipient_list_for_users,
+                      fail_silently=False, html_message=html_content_for_users)
+            return render(self.request, 'cart/thanks.html', context)
+
         else:
-            type = "Проформа Фактура"
-        if order.facture_need:
-            facture = Facture.objects.create(
-                order=order,
-                number_of_facture=order.order_number,
-                type_of_facture=type,
-                date_of_facture=date_of_order,
-                user=user,
-                firm=order.firm,
-                owner_firm=OwnerFirm.objects.first(),
-                bank=BankAccount.objects.first(),
-            )
-            # return redirect("cart:facture", facture.id) + f'?order={order}&facture={facture}&order_items={order_items}'
-            context['facture'] = facture
-        for order_item in order_items:
-            order_item.product.stock -= order_item.quantity
-            order_item.product.save()
-        data = []
-        html_content_for_admins = render_to_string(self.template_for_email_to_admins, context, request=self.request)
-        html_content_for_users = render_to_string(self.template_for_email_to_user, context, request=self.request)
-        emails_admins = [email for email in settings.ADMINS]
-        emails_admins.append(settings.NOTIFY_EMAIL)
-        emails_admins.append(settings.EMAIL_HOST_USER)
-        email_user = [user.email]
-        subject = f"Поръчка: {order.order_number}"
-        from_email = settings.EMAIL_HOST_USER
-        recipient_list_for_admins = emails_admins
-        recipient_list_for_users = email_user
-        for i in order_items:
-            data.append({'product_name': i.product.title, 'quantity': i.quantity, 'price': i.product.get_price(),
-                         'total': i.get_total_item_price()})
-        send_mail(subject, "Нова поръчка", from_email, recipient_list_for_admins,
-                  fail_silently=False, html_message=html_content_for_admins)
-        send_mail(subject, "Вашата поръчка е успешно поръчана", from_email, recipient_list_for_users,
-                  fail_silently=False, html_message=html_content_for_users)
-        return render(self.request, 'cart/thanks.html', context)
+            context = {"order": order, "user": user, "order_items": order_items, "firm": firm,
+                       "categories": Category.objects.values("name")}
+            return render(self.request, 'cart/not_order.html', context)
 
 
 class OrderDetailView(LoginRequiredMixin, generic.DetailView):
@@ -303,7 +309,6 @@ def checkout(request):
     if is_facture:
         order.facture_need = True
         order.save()
-
     if request.method == "POST":
         add_firm = request.POST.get('add-firm')
         is_firm_added = add_firm == 'on'
@@ -317,21 +322,48 @@ def checkout(request):
 
                 if selected_firm:
                     order.firm = selected_firm
+                    firm_form.fields['selected_firm_for_order'].label = "Избери Фирма за фактура"
+                    firm_form.fields['name_of_firm'].required = False
+                    firm_form.fields['bulstat'].required = False
+                    firm_form.fields['VAT_number'].required = False
+                    firm_form.fields['address_by_registration'].required = False
+                    firm_form.fields['owner_of_firm'].required = False
+                    firm_form.fields['mobile_number'].required = False
+                    firm_form.fields['static_number'].required = False
+                    firm_form.fields['email'].required = False
                 else:
+                    firm_form.fields['selected_firm_for_order'].label = "Избери Фирма за фактура"
+                    firm_form.fields['name_of_firm'].required = True
+                    firm_form.fields['bulstat'].required = True
+                    firm_form.fields['VAT_number'].required = True
+                    firm_form.fields['address_by_registration'].required = True
+                    firm_form.fields['owner_of_firm'].required = True
+                    firm_form.fields['mobile_number'].required = True
+                    firm_form.fields['static_number'].required = True
+                    firm_form.fields['email'].required = True
                     firm = firm_form.save(commit=False)
                     firm.user = user
-                    order.firm = firm.save()
+                    firm.save()
+                    order.firm = firm
+                    order.save()
                 if selected_shipping_address:
                     order.shipping_address = selected_shipping_address
+                    shipping_form.fields['selected_shipping_address'].label = "Избери адрес за доставка"
+                    shipping_form.fields['address_line_1'].required = False
+                    shipping_form.fields['address_line_2'].required = False
+                    shipping_form.fields['zip_code'].required = False
+                    shipping_form.fields['city'].required = False
                 else:
+                    shipping_form.fields['selected_shipping_address'].label = "Избери адрес за доставка"
+                    shipping_form.fields['address_line_1'].required = True
+                    shipping_form.fields['address_line_2'].required = True
+                    shipping_form.fields['zip_code'].required = True
+                    shipping_form.fields['city'].required = True
                     shipping = shipping_form.save(commit=False)
                     shipping.user = user
                     order.shipping_address = shipping.save()
                 order.save()
                 return redirect("cart:payment")
-            else:
-                shipping_form = AddressForm(user_id=user_id)
-                firm_form = AddFirmToOrder(user_id=user_id)
 
         else:
             shipping_form = AddressForm(request.POST, user_id=user_id)
@@ -340,18 +372,24 @@ def checkout(request):
                 if selected_shipping_address:
                     order.shipping_address = selected_shipping_address
                 else:
-                    order.shipping_address = Address.objects.create(
-                        address_type='S',
-                        user=user,
-                        address_line_1=shipping_form.cleaned_data['shipping_address_line_1'],
-                        address_line_2=shipping_form.cleaned_data['shipping_address_line_2'],
-                        zip_code=shipping_form.cleaned_data['shipping_zip_code'],
-                        city=shipping_form.cleaned_data['shipping_city'],
-                    )
+                    if selected_shipping_address:
+                        order.shipping_address = selected_shipping_address
+                        shipping_form.fields['selected_shipping_address'].label = "Избери адрес за доставка"
+                        shipping_form.fields['address_line_1'].required = False
+                        shipping_form.fields['address_line_2'].required = False
+                        shipping_form.fields['zip_code'].required = False
+                        shipping_form.fields['city'].required = False
+                    else:
+                        shipping_form.fields['selected_shipping_address'].label = "Избери адрес за доставка"
+                        shipping_form.fields['address_line_1'].required = True
+                        shipping_form.fields['address_line_2'].required = True
+                        shipping_form.fields['zip_code'].required = True
+                        shipping_form.fields['city'].required = True
+                        shipping = shipping_form.save(commit=False)
+                        shipping.user = user
+                        order.shipping_address = shipping.save()
                 order.save()
                 return redirect("cart:payment")
-            else:
-                shipping_form = AddressForm(user_id=user_id)
 
     context = {
         "order": order,

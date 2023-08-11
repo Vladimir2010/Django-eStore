@@ -13,11 +13,6 @@
 <link href="https://bg.allfont.net/allfont.css?fonts=open-sans-italic" rel="stylesheet" type="text/css"/>
 <meta http-equiv="Content-Language" content="bg">
 <style type="text/css">
-    {#@font-face {#}
-    {#    font-family: "Open Sans";#}
-    {#    src: url("open-sans_[bg.allfont.net].ttf");#}
-    {#}#}
-
     * {
         margin: 0;
         padding: 0;
@@ -184,23 +179,22 @@
         overflow: visible;
     }
 
-    {#@media print {#}
-    {#    /* Hide headers and footers */#}
-    {#    @page {#}
-    {#        size: auto; /* auto is used for landscape or portrait */#}
-    {#        margin: 0mm; /* You can adjust this value as needed */#}
-    {#    }#}
-    {##}
-    {#    body {#}
-    {#        margin: 0; /* Reset body margin */#}
-    {#    }#}
-    {##}
-    {#    /* Hide the print button */#}
-    {#    #printButton {#}
-    {#        display: none;#}
-    {#    }#}
-    {
-    #}#}
+    @media print {
+        /* Hide headers and footers */
+        @page {
+            size: auto; /* auto is used for landscape or portrait */
+            margin: 0mm; /* You can adjust this value as needed */
+        }
+
+        body {
+            margin: 0; /* Reset body margin */
+        }
+
+        /* Hide the print button */
+        #printButton {
+            display: none;
+        }
+    }
 </style>
 </head>
 <body>
@@ -457,15 +451,12 @@
     <p style="padding-left: 5pt;text-indent: 0pt;line-height: 1pt;text-align: left;"/>
     <p style="padding-left: 5pt;text-indent: 0pt;line-height: 1pt;text-align: left;"/>
 </div>
-<button id="printButton">Print</button>
+<button class="btn btn-primary btn-lg" id="printButton">Print</button>
 
 <script>
     document.getElementById('printButton').addEventListener('click', function () {
-        // Hide the button before printing
         this.style.display = 'none';
-        // Print the page
         window.print();
-        // Show the button after printing (using a delay to ensure it's shown after print dialog closes)
         setTimeout(() => {
             this.style.display = 'block';
         }, 1000);

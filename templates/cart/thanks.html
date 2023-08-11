@@ -7,7 +7,11 @@
                 <div class="col-md-7">
                     <h2 class="h3 mb-3 text-black">Благодарим за поръчката!</h2>
                     <p class="h5 mb-5 text-black">Скоро ще се свържем с Вас, за да потвърдим поръчката Ви!</p>
-                    <a href="{% url 'cart:facture' facture.id %}"><button>Издаване на фактура</button></a>
+                    {% if order.facture_need %}
+                        <a href="{% url 'cart:facture' facture.id %}">
+                            <button>Издаване на фактура</button>
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

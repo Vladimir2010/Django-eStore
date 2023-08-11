@@ -30,3 +30,12 @@ def total_price_withot_dds(value):
     value = float(value)
     value_without_dds = value / 1,2
     return str(value_without_dds)
+#
+# @register.filter
+# def crispy_as_p(form):
+#     crispy_form = form|crispy
+#     rendered_fields = "".join([
+#         f"{field.label_tag}{field}{field.errors}"
+#         for field in form
+#     ])
+#     return crispy_form + rendered_fields

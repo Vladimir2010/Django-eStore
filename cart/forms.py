@@ -37,28 +37,28 @@ class AddFirmToOrder(forms.ModelForm):
         exclude = ['user', 'is_deleted']
         widgets = {
             'name_of_firm': forms.TextInput(attrs={
-                'placeholder': "Име на Фирма / Име на физ. лице"
+                'placeholder': "Име на Фирма / Име на физ. лице",
             }),
             'bulstat': forms.TextInput(attrs={
-                'placeholder': "ЕИК/ЕГН"
+                'placeholder': "ЕИК/ЕГН",
             }),
-            'vat_number': forms.TextInput(attrs={
-                'placeholder': "Номер по ЗДДС (по избор)"
+            'VAT_number': forms.TextInput(attrs={
+                'placeholder': "Номер по ЗДДС (по избор)",
             }),
             'address_by_registration': forms.TextInput(attrs={
-                'placeholder': "Адрес по регистрация"
+                'placeholder': "Адрес по регистрация",
             }),
             'owner_of_firm': forms.TextInput(attrs={
-                'placeholder': "МОЛ"
+                'placeholder': "МОЛ",
             }),
             'mobile_number': forms.TextInput(attrs={
-                'placeholder': "Мобилен номер"
+                'placeholder': "Мобилен номер",
             }),
             'static_number': forms.TextInput(attrs={
-                'placeholder': "Стационарен номер"
+                'placeholder': "Стационарен номер",
             }),
             'email': forms.TextInput(attrs={
-                'placeholder': "Имейл"
+                'placeholder': "Имейл",
             })
         }
         labels = {
@@ -71,7 +71,6 @@ class AddFirmToOrder(forms.ModelForm):
             'static_number': "Стационарен номер",
             'email': "Имейл"
         }
-
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.get('user_id')
@@ -90,6 +89,16 @@ class AddFirmToOrder(forms.ModelForm):
 
         self.fields['selected_firm_for_order'].queryset = firm_form_qs
         self.fields['selected_firm_for_order'].label = "Избери Фирма за фактура"
+        if firm_form_qs:
+            self.fields['selected_firm_for_order'].label = "Избери Фирма за фактура"
+            self.fields['name_of_firm'].required = False
+            self.fields['bulstat'].required = False
+            self.fields['VAT_number'].required = False
+            self.fields['address_by_registration'].required = False
+            self.fields['owner_of_firm'].required = False
+            self.fields['mobile_number'].required = False
+            self.fields['static_number'].required = False
+            self.fields['email'].required = False
 
 
 class AddressForm(forms.ModelForm):
@@ -101,7 +110,7 @@ class AddressForm(forms.ModelForm):
         exclude = ['user', 'default', 'address_type']
         widgets = {
             'address_line_1': forms.TextInput(attrs={
-                'placeholder': "Адрес за доставка",
+                'placeholder': "Адрес за доставка"
 
             }),
             'address_line_2': forms.TextInput(attrs={
@@ -135,6 +144,16 @@ class AddressForm(forms.ModelForm):
             user=user,
             address_type='S'
         )
-        self.fields['selected_shipping_address'].queryset = shipping_address_qs
-        self.fields['selected_shipping_address'].label = "Избери адрес за доставка"
-
+        if shipping_address_qs:
+            self.fields['selected_shipping_address'].queryset = shipping_address_qs
+            self.fields['selected_shipping_address'].label = "Избери адрес за доставка"
+            self.fields['address_line_1'].required = False
+            self.fields['address_line_2'].required = False
+            self.fields['zip_code'].required = False
+            self.fields['city'].required = False
+        else:
+            self.fields['selected_shipping_address'].label = "Избери адрес за доставка"
+            self.fields['address_line_1'].required = True
+            self.fields['address_line_2'].required = True
+            self.fields['zip_code'].required = True
+            self.fields['city'].required = True

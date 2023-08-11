@@ -1,11 +1,2 @@
 {% load i18n %}
-
-<div class="site-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-                <h2 class="h3 mb-3 text-black">Вие потвърдихте вашият имейл:  {{email}}.</h2>
-            </div>
-        </div>
-    </div>
-</div>
+Вие потвърдихте вашият имейл:  {{email}}.

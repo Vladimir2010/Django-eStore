@@ -1,26 +1,43 @@
+#version: '3.4'
+#services:
+#  postgres:
+#    image: postgres
+#    restart: always
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      POSTGRES_PASSWORD: "VA0885281774"
+#      POSTGRES_USER: "postgres"
+#      POSTGRES_DB: "estore"
+#      PGDATA: /var/lib/postgresql/data/pgdata
+#    volumes:
+#      - ./postgresql:/var/lib/postgresql/data
+#  estore:
+#    build: .
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - postgres
+
 version: '3.4'
+
 services:
+  estore:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - ecom/.env
   postgres:
     image: postgres
     restart: always
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_USER: "postgres"
-      POSTGRES_DB: "estore"
+      POSTGRES_PASSWORD: VA0885281774
+      POSTGRES_USER: postgres
+      POSTGRES_DB: e_store
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ./postgresql:/var/lib/postgresql/data
-  pgadmin4:
-    image: dpage/pgadmin4
-    user: "${UID}:${GID}"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "profin.e.store@gmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "postgres"
-    volumes:
-      - ./pgadmin4:/var/lib/pgadmin
-    ports:
-      - "5433:80"
-    depends_on:
-      - postgres

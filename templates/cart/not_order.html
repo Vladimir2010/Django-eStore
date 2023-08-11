@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+<body>
+{% block content %}
+	<div class="site-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <h2 class="h3 mb-3 text-black">Нямате продукти в количката.</h2>
+                <p class="h3 mb-3 text-black">Не можете да направите поръчка</p>
+                <a href="{% url 'cart:product-list' %}"><button class="btn btn-primary">Отидете в магазина</button></a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+</body>
+</html>

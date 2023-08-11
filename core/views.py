@@ -1,20 +1,15 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail
-from django.shortcuts import reverse, render, redirect, get_object_or_404
-from django.views import generic
-from cart.models import Order, OrderItem, Product, Category
-from .forms import ContactForm, EditUserForm, FirmForm, EditFirmForm, RemoveFirmForm
 from django.core import mail
-from django.core.mail import EmailMessage
-from .models import CustomUserModel, Firm
-from cart.utils import get_or_set_order_session
-from django.views.defaults import (page_not_found, server_error, bad_request, permission_denied,
-    server_error)
-
 from django.shortcuts import render
-from django.template import RequestContext
+from django.shortcuts import reverse, redirect, get_object_or_404
+from django.views import generic
+
+from cart.models import Order, OrderItem, Product, Category
+from cart.utils import get_or_set_order_session
+from .forms import ContactForm, EditUserForm, FirmForm, EditFirmForm, RemoveFirmForm
+from .models import Firm
 
 
 # Class Based Views
@@ -85,18 +80,16 @@ def page_not_found_view(request, exception):
     return render(request, '404.html', status=404)
 
 
-def handler400(request, *args, **argv):
+def bad_request(request, *args, **argv):
     return render(request, '400.html', status=404)
 
 
-def handler500(request, *args, **argv):
+def internal_server_error(request, *args, **argv):
     return render(request, '500.html', status=404)
 
 
-def handler403(request, *args, **argv):
+def forrbiden(request, *args, **argv):
     return render(request, '403.html', status=404)
-
-
 
 
 def edit_profile_view(request):

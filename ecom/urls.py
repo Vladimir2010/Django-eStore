@@ -3,15 +3,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import handler404, handler500, handler400, handler403
-from core.views import page_not_found_view
+from core.views import page_not_found_view, forrbiden, bad_request, internal_server_error
 from django.urls import re_path
 from django.views.static import serve
 
 
 handler404 = page_not_found_view
-handler500 = 'core.views.handler500'
-handler400 = 'core.views.handler400'
-handler403 = 'core.views.handler403'
+handler500 = internal_server_error
+handler400 = bad_request
+handler403 = forrbiden
 
 
 urlpatterns = [
@@ -20,6 +20,10 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('cart/', include('cart.urls', namespace='cart')),
     path('staff/', include('staff.urls', namespace='staff')),
+    path('page_not_found_view/', page_not_found_view, name="page_not_found"),
+    path('bad_request/', bad_request, name="bad_request"),
+    path('internal_server_error/', internal_server_error, name="internal_server_error"),
+    path('forrbiden/', forrbiden, name="forrbiden"),
 
 
 ]
