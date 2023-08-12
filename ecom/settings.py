@@ -18,7 +18,7 @@ USE_TZ = True
 LANGUAGES = [("bg", _("Bulgarian"))]
 # ENVIRON get variables
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", False)
+DEBUG = False
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", ).split()
 POSTGRES_DB = os.environ.get("POSTGRES_DB")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
@@ -163,21 +163,24 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static_files")]
+# STATIC_ROOT = os.path.join(BASE_DIR, "static_files")
 MEDIA_URL = '/media/'
+MEDIAFILES_DIRS = [
+    os.path.join(os.path.dirname(BASE_DIR), "media"),
+]
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # More settings for DEBUG=False
 if DEBUG is False:
-    SESSION_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_REDIRECT_EXEMPT = []
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # SESSION_COOKIE_SECURE = True
+    # SECURE_BROWSER_XSS_FILTER = True
+    # SECURE_CONTENT_TYPE_NOSNIFF = True
+    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # SECURE_HSTS_SECONDS = 31536000
+    # SECURE_REDIRECT_EXEMPT = []
+    # SECURE_SSL_REDIRECT = True
+    # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 

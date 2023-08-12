@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
     <div class="bg-light py-3">
@@ -39,7 +39,7 @@
                         {% for product in object_list %}
                             <div class="col-sm-6 col-md-6 col-lg-4 mb-4" data-aos='fade-up'>
                                 <figure class="block-4-image">
-                                    <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}"
+                                    <a href="{{ product.get_absolute_url }}"><img src="{% static product.image.url %}"
                                                                                   class="img-fluid"
                                                                                   title="{{ product.title }}"></a>
                                 </figure>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
     <div class="bg-light py-3">
@@ -36,7 +36,7 @@
                                 {% for item in order.items.all %}
                                     <tr>
                                         <td class="product-thumbnail">
-                                            <img src="{{ item.product.image.url }}" class="img-fluid">
+                                            <img src="{% static item.product.image.url %}" class="img-fluid">
                                         </td>
                                         <td class="product-name">
                                             <h2 class="h5 text-black">{{ item.product.title }}</h2>

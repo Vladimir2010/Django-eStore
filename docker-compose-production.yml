@@ -3,26 +3,31 @@ version: '3.4'
 services:
   estore:
     build: .
-    command: gunicorn --bind=0.0.0.0:8000 ecom.wsgi:application
+    command: gunicorn ecom.wsgi:application
     platform: linux/amd64
     ports:
       - "8000:8000"
     env_file:
-      - ./envs/.env
+      - ecom/.env
     volumes:
       - /tmp/Django_eCommerce/static:/app/static
+  db:
+    image: postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
   postgres:
     image: postgres
     restart: always
     ports:
       - "5432:5432"
+    user: "postgres"
     environment:
       POSTGRES_PASSWORD: VA0885281774
       POSTGRES_USER: postgres
-      POSTGRES_DB: e_store
-      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: estore
+      PGDATA: /var/lib/postgresqlite/data/pgdata
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
+      - ./postgresql:/var/lib/postgresqlite/data
 
   nginx:
     image: nginx

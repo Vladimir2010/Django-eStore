@@ -15,6 +15,7 @@ from core.models import OwnerFirm
 from .forms import AddToCartForm, AddressForm, AddFirmToOrder
 from .models import Product, OrderItem, Address, Order, Category, BankAccount, Facture
 from .utils import get_or_set_order_session
+from django.forms import ValidationError
 
 
 class ProductListView(generic.ListView):
@@ -103,9 +104,13 @@ class IncreaseQuantityView(generic.View):
     @staticmethod
     def get(request, *args, **kwargs):
         order_item = get_object_or_404(OrderItem, id=kwargs['pk'])
-        order_item.quantity += 1
-        order_item.save()
-        return redirect("cart:summary")
+        if order_item.quantity > order_item.product.stock:
+            raise ValidationError(
+                f"Максималното налично количество е: {order_item.product.stock}")
+        else:
+            order_item.quantity += 1
+            order_item.save()
+            return redirect("cart:summary")
 
 
 class DecreaseQuantityView(generic.View):

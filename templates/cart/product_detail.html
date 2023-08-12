@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
 
     <div class="bg-light py-3">
@@ -18,12 +19,13 @@
         <div class="container">
             <div class="row mb-5">
                 <div class="col-md-4">
-                    <img src="{{ product.image.url }}" class="img-fluid">
+                    <img src="{% static product.image.url %}" class="img-fluid">
                 </div>
                 <div class="col-md-4 py-4">
                     <h2 class="text-black">{{ product.title }}</h2>
                     <p>{{ product.description }}</p>
                     <p>Налично количество: {{ product.stock }} бр.</p>
+                    <p>Цена: {{ product.price|floatformat:2 }}</p>
                     {% if product.in_stock %}
                         <form method="POST">
                             {% csrf_token %}
