@@ -45,12 +45,12 @@ class ProductUpdateView(LoginRequiredMixin, StaffUserMixin, generic.UpdateView):
         return super(ProductUpdateView, self).form_valid(form)
 
 
-class ProductDeleteView(LoginRequiredMixin, StaffUserMixin, generic.DeleteView):
-    template_name = 'staff/product_delete.html'
-    queryset = Product.objects.all()
-
-    def get_success_url(self):
-        return reverse("staff:product-list")
+# class ProductDeleteView(LoginRequiredMixin, StaffUserMixin, generic.DeleteView):
+#     template_name = 'staff/product_delete.html'
+#     queryset = Product.objects.all()
+#
+#     def get_success_url(self):
+#         return reverse("staff:product-list")
 
 
 class CategoryCreateView(LoginRequiredMixin, StaffUserMixin, generic.CreateView):
