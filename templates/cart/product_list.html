@@ -19,7 +19,9 @@
                             <div class="col-md-7 float-right">
                                 <form method="GET" action="{% url 'cart:search_products' %}">
                                     <input class="float-right" type="text" name="q" placeholder="Търсете продукти...">
-                                    <button class="float-right btn btn-primary btn-secondary" style="margin-top: 10px" type="submit">Търси</button>
+                                    <button class="float-right btn btn-primary btn-secondary" style="margin-top: 10px"
+                                            type="submit">Търси
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -49,12 +51,17 @@
                                         <h3>{{ product.title }}</h3>
                                     </a>
                                     <p class="mb-0">{{ product.description }}</p>
-                                    <p class="mb-0">{{ product.price|floatformat:2 }}</p>
-                                    <a href="{% url 'update-cart' product.id %}">
-                                        <button type='submit' class="btn btn-sm btn-primary buy-now">Добави в
-                                            количката
-                                        </button>
-                                    </a>
+                                    {% if not product.stock <= 0 %}
+                                        <p class="mb-0">{{ product.price|floatformat:2 }}</p>
+                                        <a href="{% url 'update-cart' product.id %}">
+                                            <button type='submit' class="btn btn-sm btn-primary buy-now">Добави в
+                                                количката
+                                            </button>
+                                        </a>
+                                    {% else %}
+                                        <p class="mb-0">Няма в наличност</p>
+                                    {% endif %}
+
                                 </div>
                             </div>
                         {% endfor %}
