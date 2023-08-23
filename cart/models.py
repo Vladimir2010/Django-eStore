@@ -89,7 +89,7 @@ class OrderItem(models.Model):
         return self.quantity * self.product.price
 
     def get_total_item_price(self):
-        price = self.get_raw_total_item_price()  # 1000
+        price = self.get_raw_total_item_price()
         return "{:.2f}".format(price)
 
 

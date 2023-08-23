@@ -18,7 +18,7 @@ USE_TZ = True
 LANGUAGES = [("bg", _("Bulgarian"))]
 # ENVIRON get variables
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", ).split()
 POSTGRES_DB = os.environ.get("POSTGRES_DB")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
@@ -73,7 +73,6 @@ MIDDLEWARE = [
 ]
 
 # BACKENDS
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -126,7 +125,6 @@ if POSTGRE:
     }
 ACCOUNT_FORMS = {
 'signup': 'core.forms.CustomSignupForm',
-# 'login': 'core.forms.CustomLoginForm',
 }
 
 
@@ -173,22 +171,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # More settings for DEBUG=False
 if DEBUG is False:
-    # SESSION_COOKIE_SECURE = True
-    # SECURE_BROWSER_XSS_FILTER = True
-    # SECURE_CONTENT_TYPE_NOSNIFF = True
-    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    # SECURE_HSTS_SECONDS = 31536000
-    # SECURE_REDIRECT_EXEMPT = []
-    # SECURE_SSL_REDIRECT = True
-    # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': '401840202454-8cs05gb1d6r6forbpgq2hon0ri9r6d2a.apps.googleusercontent.com',
-            'secret': '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',
-        }
-    }
-}
+    SESSION_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_REDIRECT_EXEMPT = []
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

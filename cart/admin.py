@@ -24,9 +24,6 @@ class OrderItemAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['start_date', 'ordered', 'ordered_date']
 
-#
-# class PaymentAdmin(admin.ModelAdmin):
-#     list_display = ['order', 'payment_method', ]
 
 class BankAccountDisplay(admin.ModelAdmin):
     list_display = [
@@ -43,5 +40,4 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(Order, OrderAdmin)
-# admin.site.register(Payment, PaymentAdmin)
 admin.site.register(BankAccount, BankAccountDisplay)
